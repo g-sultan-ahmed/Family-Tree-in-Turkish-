@@ -5,858 +5,204 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aile Ağacı — Turkish Family Tree</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --bg2: #111118;
-    --bg3: #18181f;
-    --text: #f0ede8;
-    --text-muted: rgba(240,237,232,0.45);
-    --text-dim: rgba(240,237,232,0.2);
-    --accent: #c9a96e;
-    --accent2: #8ba7c7;
-    --accent3: #b07d6e;
-    --purple: #7c6fcd;
-    --teal: #4fa89a;
-    --coral: #c97c6e;
-    --gold: #c9a96e;
-    --border: rgba(240,237,232,0.08);
-    --border-accent: rgba(201,169,110,0.3);
-    --radius: 16px;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    cursor: default;
-  }
-
-  /* ─── HERO ─── */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding: 2rem;
-  }
-
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .hero-bg svg {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    inset: 0;
-  }
-
-  .path-line {
-    stroke: rgba(201,169,110,0.12);
-    fill: none;
-    stroke-width: 0.8;
-    stroke-dasharray: 8 6;
-    animation: flow 20s linear infinite;
-  }
-  .path-line:nth-child(even) {
-    stroke: rgba(139,167,199,0.08);
-    animation-duration: 28s;
-    animation-direction: reverse;
-  }
-  .path-line:nth-child(3n) {
-    stroke: rgba(124,111,205,0.07);
-    animation-duration: 35s;
-  }
-
-  @keyframes flow {
-    from { stroke-dashoffset: 0; }
-    to   { stroke-dashoffset: -200; }
-  }
-
-  /* Radial glow */
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 65%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    max-width: 800px;
-  }
-
-  .hero-eyebrow {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.2s forwards;
-  }
-
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(4rem, 10vw, 8rem);
-    font-weight: 300;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.4s forwards;
-  }
-
-  .hero-title .accent { color: var(--accent); font-style: italic; }
-
-  .hero-sub {
-    font-size: 15px;
-    color: var(--text-muted);
-    line-height: 1.7;
-    max-width: 480px;
-    margin: 0 auto 3rem;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.6s forwards;
-  }
-
-  .hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 32px;
-    border: 0.5px solid var(--border-accent);
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--accent);
-    text-decoration: none;
-    background: rgba(201,169,110,0.06);
-    backdrop-filter: blur(12px);
-    transition: all 0.3s ease;
-    opacity: 0;
-    animation: fadeUp 1s ease 0.8s forwards;
-    letter-spacing: 0.04em;
-  }
-
-  .hero-cta:hover {
-    background: rgba(201,169,110,0.12);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(201,169,110,0.15);
-  }
-
-  .hero-cta svg { transition: transform 0.3s; }
-  .hero-cta:hover svg { transform: translateY(3px); }
-
-  .scroll-hint {
-    position: absolute;
-    bottom: 2.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    animation: fadeIn 1s ease 1.4s forwards;
-  }
-
-  .scroll-hint span {
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
-
-  .scroll-line {
-    width: 1px;
-    height: 48px;
-    background: linear-gradient(to bottom, var(--accent), transparent);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
-
-  @keyframes fadeUp {
-    from { opacity:0; transform: translateY(24px); }
-    to   { opacity:1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity:0; }
-    to   { opacity:1; }
-  }
-
-  /* ─── SECTION WRAPPER ─── */
-  .section {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 5rem 2rem;
-  }
-
-  .section-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-  }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-    font-weight: 300;
-    margin-bottom: 1.5rem;
-    line-height: 1.15;
-  }
-
-  .section-title em { font-style: italic; color: var(--accent); }
-
-  .section-desc {
-    font-size: 15px;
-    color: var(--text-muted);
-    line-height: 1.8;
-    max-width: 560px;
-    margin-bottom: 4rem;
-  }
-
-  /* ─── DIVIDER ─── */
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: var(--border);
-    margin: 0;
-  }
-
-  /* ─── FAMILY TREE ─── */
-  .tree-section {
-    padding: 5rem 1.5rem 6rem;
-    background: var(--bg);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .tree-section::before {
-    content: '';
-    position: absolute;
-    top: -200px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 900px;
-    height: 900px;
-    background: radial-gradient(circle, rgba(124,111,205,0.04) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .tree-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .tree-header {
-    text-align: center;
-    margin-bottom: 3.5rem;
-  }
-
-  /* Generation rows */
-  .gen-row {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    position: relative;
-    margin-bottom: 0;
-  }
-
-  /* Connector canvas */
-  .connectors {
-    width: 100%;
-    height: 60px;
-    display: block;
-    overflow: visible;
-  }
-
-  /* Person card */
-  .person-card {
-    position: relative;
-    background: var(--bg3);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.1rem 1.2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
-    min-width: 130px;
-    max-width: 160px;
-    flex: 1;
-  }
-
-  .person-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(201,169,110,0.35);
-    background: rgba(201,169,110,0.04);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,169,110,0.12);
-  }
-
-  .person-card.is-you {
-    background: rgba(201,169,110,0.08);
-    border-color: rgba(201,169,110,0.5);
-    box-shadow: 0 0 48px rgba(201,169,110,0.1);
-  }
-
-  .person-card.gen-1 { border-color: rgba(124,111,205,0.3); }
-  .person-card.gen-1:hover { border-color: rgba(124,111,205,0.6); background: rgba(124,111,205,0.05); }
-
-  .person-card.gen-2 { border-color: rgba(79,168,154,0.3); }
-  .person-card.gen-2:hover { border-color: rgba(79,168,154,0.6); background: rgba(79,168,154,0.05); }
-
-  .person-card.gen-4 { border-color: rgba(201,124,110,0.3); }
-  .person-card.gen-4:hover { border-color: rgba(201,124,110,0.6); background: rgba(201,124,110,0.05); }
-
-  .person-card.gen-5 { border-color: rgba(186,117,23,0.3); }
-  .person-card.gen-5:hover { border-color: rgba(186,117,23,0.6); background: rgba(186,117,23,0.05); }
-
-  .card-emoji { font-size: 1.8rem; margin-bottom: 0.5rem; display: block; }
-
-  .card-turkish {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 3px;
-    line-height: 1.2;
-  }
-
-  .card-english {
-    font-size: 10px;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .card-dot {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--bg);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  .person-card:hover .card-dot { opacity: 1; }
-
-  /* ─── EXPANDED INFO ─── */
-  .info-panel {
-    margin: 2rem auto;
-    max-width: 700px;
-    background: var(--bg3);
-    border: 0.5px solid var(--border-accent);
-    border-radius: 20px;
-    padding: 2rem 2.5rem;
-    display: none;
-    animation: fadeUp 0.4s ease both;
-  }
-
-  .info-panel.visible { display: block; }
-
-  .info-panel-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.2rem;
-  }
-
-  .info-avatar {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.6rem;
-    flex-shrink: 0;
-    background: rgba(201,169,110,0.1);
-  }
-
-  .info-names { flex: 1; }
-
-  .info-turkish {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    font-weight: 600;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .info-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 100px;
-    background: rgba(201,169,110,0.1);
-    color: var(--accent);
-    border: 0.5px solid rgba(201,169,110,0.25);
-  }
-
-  .info-desc {
-    font-size: 14px;
-    color: var(--text-muted);
-    line-height: 1.75;
-    margin-bottom: 1.2rem;
-  }
-
-  .info-facts {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .info-fact {
-    background: rgba(240,237,232,0.04);
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  .info-fact strong {
-    display: block;
-    color: var(--text);
-    font-weight: 500;
-    margin-bottom: 2px;
-    font-size: 13px;
-  }
-
-  /* ─── CONNECTOR SVG LINES ─── */
-  .tree-lines {
-    width: 100%;
-    overflow: visible;
-    display: block;
-  }
-
-  .connector {
-    stroke: rgba(240,237,232,0.1);
-    stroke-width: 1;
-    fill: none;
-  }
-
-  /* ─── REFERENCE TABLE ─── */
-  .ref-section {
-    padding: 5rem 2rem;
-    background: var(--bg2);
-  }
-
-  .ref-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    overflow: hidden;
-  }
-
-  .ref-card {
-    background: var(--bg2);
-    padding: 1.5rem 1.8rem;
-    transition: background 0.2s;
-    cursor: default;
-  }
-
-  .ref-card:hover { background: rgba(201,169,110,0.04); }
-
-  .ref-card-gen {
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 0.8rem;
-  }
-
-  .ref-row {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 6px 0;
-    border-bottom: 0.5px solid var(--border);
-  }
-
-  .ref-row:last-child { border-bottom: none; }
-
-  .ref-tr {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .ref-en {
-    font-size: 12px;
-    color: var(--text-muted);
-    text-align: right;
-  }
-
-  /* ─── TIPS SECTION ─── */
-  .tips-section {
-    padding: 5rem 2rem;
-    background: var(--bg);
-  }
-
-  .tips-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin-top: 3rem;
-  }
-
-  .tip-card {
-    background: var(--bg3);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.8rem;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s, border-color 0.3s;
-  }
-
-  .tip-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(201,169,110,0.25);
-  }
-
-  .tip-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .tip-card:hover::before { opacity: 1; }
-
-  .tip-icon {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .tip-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.6rem;
-  }
-
-  .tip-text {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.7;
-  }
-
-  /* ─── FOOTER ─── */
-  footer {
-    padding: 3rem 2rem;
-    text-align: center;
-    border-top: 0.5px solid var(--border);
-    background: var(--bg);
-  }
-
-  footer p {
-    font-size: 13px;
-    color: var(--text-dim);
-  }
-
-  footer .footer-word {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    color: var(--accent);
-    font-size: 15px;
-  }
-
-  /* ─── RESPONSIVE ─── */
-  @media(max-width: 768px) {
-    .gen-row { gap: 8px; }
-    .person-card { min-width: 90px; max-width: 110px; padding: 0.8rem 0.6rem; }
-    .card-turkish { font-size: 0.85rem; }
-    .card-emoji { font-size: 1.4rem; }
-    .info-panel { padding: 1.5rem; }
-  }
-
-  @media(max-width: 480px) {
-    .person-card { min-width: 72px; max-width: 90px; padding: 0.7rem 0.5rem; }
-    .card-turkish { font-size: 0.75rem; }
-    .card-english { display: none; }
-    .card-emoji { font-size: 1.2rem; margin-bottom: 3px; }
-  }
-
-  /* Generation label */
-  .gen-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0.75rem;
-  }
-
-  .gen-tag {
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    padding: 3px 12px;
-    border: 0.5px solid var(--border);
-    border-radius: 100px;
-  }
-
-  /* ─── TREE WRAPPER with vertical connectors ─── */
-  .tree-wrapper {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-  }
-
-  .tree-row-wrap {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* vertical line segment */
-  .vline {
-    width: 1px;
-    height: 30px;
-    background: linear-gradient(to bottom, rgba(240,237,232,0.15), rgba(240,237,232,0.08));
-  }
-
-  /* horizontal line across siblings */
-  .hline-wrap {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    height: 1px;
-    margin: 0;
-  }
-
-  .hline {
-    position: absolute;
-    height: 1px;
-    background: rgba(240,237,232,0.1);
-    top: 0;
-  }
-
-  /* drop lines from hline to each card */
-  .drop-wrap {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    padding-top: 0;
-  }
-
-  .drop-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-    min-width: 130px;
-    max-width: 160px;
-  }
-
-  .drop-line {
-    width: 1px;
-    height: 20px;
-    background: rgba(240,237,232,0.1);
-  }
-
-  /* spacing spacer */
-  .spacer { height: 20px; }
-
-  /* legend */
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 3rem;
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 11px;
-    color: var(--text-muted);
-    padding: 5px 12px;
-    border: 0.5px solid var(--border);
-    border-radius: 100px;
-    background: var(--bg3);
-  }
-
-  .legend-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-  }
-
-  /* ─── QUIZ SECTION ─── */
-  .quiz-section {
-    padding: 5rem 2rem;
-    background: var(--bg2);
-  }
-
-  .quiz-box {
-    max-width: 600px;
-    margin: 3rem auto 0;
-    background: var(--bg3);
-    border: 0.5px solid var(--border);
-    border-radius: 20px;
-    padding: 2.5rem;
-    text-align: center;
-  }
-
-  .quiz-q {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    margin-bottom: 2rem;
-    line-height: 1.3;
-  }
-
-  .quiz-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 1.5rem;
-  }
-
-  .quiz-btn {
-    padding: 12px 16px;
-    border: 0.5px solid var(--border);
-    border-radius: 10px;
-    background: rgba(240,237,232,0.03);
-    color: var(--text);
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .quiz-btn:hover { background: rgba(201,169,110,0.08); border-color: rgba(201,169,110,0.3); }
-  .quiz-btn.correct { background: rgba(79,168,154,0.15); border-color: rgba(79,168,154,0.5); color: #4fa89a; }
-  .quiz-btn.wrong   { background: rgba(201,124,110,0.15); border-color: rgba(201,124,110,0.5); color: #c97c6e; }
-
-  .quiz-feedback {
-    font-size: 14px;
-    min-height: 20px;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-  }
-
-  .quiz-next {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 24px;
-    border: 0.5px solid var(--border-accent);
-    border-radius: 100px;
-    font-size: 13px;
-    color: var(--accent);
-    background: rgba(201,169,110,0.07);
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-    margin-top: 0.5rem;
-  }
-  .quiz-next:hover { background: rgba(201,169,110,0.14); transform: translateY(-1px); }
-
-  .quiz-score {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-top: 1rem;
-  }
+:root {
+  --bg:        #faf7f2;
+  --bg2:       #f3ede3;
+  --bg3:       #ede5d8;
+  --card:      #ffffff;
+  --text:      #2c2416;
+  --text-2:    #5a4a35;
+  --text-3:    #9a8470;
+  --accent:    #b5873a;
+  --accent-lt: #f5e9d4;
+  --accent-dk: #7a5520;
+  --g1-bg:#ede8f9;--g1-bd:#8b7dd8;--g1-tx:#3d2f8c;--g1-dot:#7c6fcd;
+  --g2-bg:#d8f3ec;--g2-bd:#3aaa8e;--g2-tx:#1a5c4a;--g2-dot:#2e9e7e;
+  --g3-bg:#eef3fb;--g3-bd:#6a9fd8;--g3-tx:#1e4a7a;
+  --g4-bg:#fde7e0;--g4-bd:#d9614a;--g4-tx:#7a2510;--g4-dot:#d05840;
+  --g5-bg:#fef0c2;--g5-bd:#c9a010;--g5-tx:#6b4f08;--g5-dot:#c9a030;
+  --radius:18px;
+  --shadow:0 4px 24px rgba(44,36,22,0.10);
+  --shadow-h:0 10px 40px rgba(44,36,22,0.18);
+  --border:rgba(44,36,22,0.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:18px}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;font-weight:400;line-height:1.6;overflow-x:hidden}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:3rem 1.5rem 5rem;background:linear-gradient(160deg,#2a1f0e 0%,#3d2b10 45%,#1e1508 100%)}
+.hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hero-bg svg{width:100%;height:100%;position:absolute;inset:0}
+.path-line{fill:none;stroke-width:1;stroke-dasharray:10 8;animation:flow 22s linear infinite}
+@keyframes flow{from{stroke-dashoffset:0}to{stroke-dashoffset:-240}}
+.hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80vw;height:80vw;max-width:800px;max-height:800px;background:radial-gradient(circle,rgba(201,160,80,0.18) 0%,transparent 65%);pointer-events:none;z-index:0}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:860px}
+.hero-eyebrow{font-size:clamp(0.72rem,2vw,0.88rem);font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:#e8c880;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.8s ease 0.2s forwards}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3.6rem,12vw,8.5rem);font-weight:700;line-height:1;letter-spacing:-0.02em;color:#fdf5e6;margin-bottom:1.4rem;opacity:0;animation:fadeUp 1s ease 0.35s forwards}
+.hero-title .acc{color:#e8c268;font-style:italic}
+.hero-sub{font-size:clamp(1.05rem,3vw,1.25rem);color:rgba(253,245,230,0.65);line-height:1.75;max-width:520px;margin:0 auto 2.5rem;font-weight:400;opacity:0;animation:fadeUp 1s ease 0.55s forwards}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border:1.5px solid rgba(232,194,104,0.45);border-radius:100px;font-size:clamp(0.95rem,2.5vw,1.05rem);font-weight:600;color:#e8c268;text-decoration:none;background:rgba(232,194,104,0.08);backdrop-filter:blur(16px);transition:all .3s;opacity:0;animation:fadeUp 1s ease 0.75s forwards}
+.hero-cta:hover{background:rgba(232,194,104,0.18);transform:translateY(-2px);box-shadow:0 10px 36px rgba(200,160,60,0.22)}
+.hero-cta svg{transition:transform .3s}
+.hero-cta:hover svg{transform:translateY(3px)}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeIn 1s ease 1.5s forwards}
+.scroll-hint span{font-size:0.72rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(253,245,230,0.35)}
+.scroll-line{width:1px;height:52px;background:linear-gradient(to bottom,#e8c268,transparent);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* LAYOUT */
+.divider{width:100%;height:1px;background:var(--bg3)}
+.section{max-width:1120px;margin:0 auto;padding:5rem 1.5rem}
+.section-label{font-size:clamp(0.68rem,1.8vw,0.8rem);font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:.9rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2.1rem,5.5vw,3.8rem);font-weight:700;line-height:1.12;color:var(--text);margin-bottom:1.2rem}
+.section-title em{font-style:italic;color:var(--accent)}
+.section-desc{font-size:clamp(1rem,2.5vw,1.12rem);color:var(--text-2);line-height:1.8;max-width:580px;margin-bottom:3.5rem}
+
+/* TREE SECTION */
+.tree-section{padding:4rem 1rem 6rem;background:var(--bg2)}
+.tree-container{max-width:1080px;margin:0 auto}
+.tree-header{text-align:center;padding-bottom:2.5rem}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:2.8rem}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:clamp(0.78rem,2vw,0.88rem);font-weight:600;color:var(--text-2);padding:7px 16px;background:var(--card);border:1px solid var(--border);border-radius:100px;box-shadow:0 2px 8px rgba(44,36,22,.06)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* GEN BAND */
+.gen-band{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px;padding:0 8px}
+.gen-band-line{flex:1;max-width:100px;height:2px;border-radius:2px}
+.gen-band-pill{font-size:clamp(0.72rem,2vw,0.82rem);font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 18px;border-radius:100px;white-space:nowrap;text-align:center}
+
+/* PERSON CARD */
+.person-card{position:relative;background:var(--card);border-radius:var(--radius);padding:clamp(14px,3vw,22px) clamp(10px,2vw,18px);text-align:center;cursor:pointer;transition:transform .28s cubic-bezier(.22,1,.36,1),box-shadow .28s;box-shadow:var(--shadow);border:2px solid transparent;user-select:none;-webkit-tap-highlight-color:transparent}
+.person-card:hover,.person-card:active{transform:translateY(-5px) scale(1.03);box-shadow:var(--shadow-h)}
+.card-avatar{width:clamp(54px,10vw,72px);height:clamp(54px,10vw,72px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(1.5rem,4vw,2rem);margin:0 auto 10px;border:3px solid transparent;transition:transform .2s}
+.person-card:hover .card-avatar{transform:scale(1.1)}
+.card-turkish{font-family:'Playfair Display',serif;font-size:clamp(0.95rem,2.5vw,1.12rem);font-weight:700;line-height:1.2;margin-bottom:3px}
+.card-english{font-size:clamp(0.7rem,1.8vw,0.8rem);font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.65}
+.card-tap{font-size:clamp(0.62rem,1.5vw,0.7rem);margin-top:8px;opacity:.35;font-weight:500}
+
+/* YOU card */
+.you-card{background:linear-gradient(145deg,#fff8e8,#fef0c4);border-color:var(--accent)!important;box-shadow:0 0 0 4px rgba(181,135,58,.18),var(--shadow)}
+.you-card .card-turkish{font-size:clamp(1.35rem,4vw,1.9rem);color:var(--accent-dk)}
+.you-star{display:inline-block;font-size:clamp(1.7rem,5vw,2.5rem);margin-bottom:6px;animation:spin 8s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* gen colours */
+.g1{border-color:var(--g1-bd)}.g1 .card-avatar{background:var(--g1-bg);border-color:var(--g1-bd)}.g1 .card-turkish{color:var(--g1-tx)}.g1 .card-english{color:var(--g1-tx)}
+.g2{border-color:var(--g2-bd)}.g2 .card-avatar{background:var(--g2-bg);border-color:var(--g2-bd)}.g2 .card-turkish{color:var(--g2-tx)}.g2 .card-english{color:var(--g2-tx)}
+.g3s{border-color:var(--g3-bd)}.g3s .card-avatar{background:var(--g3-bg);border-color:var(--g3-bd)}.g3s .card-turkish{color:var(--g3-tx)}.g3s .card-english{color:var(--g3-tx)}
+.g4{border-color:var(--g4-bd)}.g4 .card-avatar{background:var(--g4-bg);border-color:var(--g4-bd)}.g4 .card-turkish{color:var(--g4-tx)}.g4 .card-english{color:var(--g4-tx)}
+.g5{border-color:var(--g5-bd)}.g5 .card-avatar{background:var(--g5-bg);border-color:var(--g5-bd)}.g5 .card-turkish{color:var(--g5-tx)}.g5 .card-english{color:var(--g5-tx)}
+
+/* TREE ROW */
+.tree-row{display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;position:relative}
+.tree-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:clamp(110px,22vw,152px);max-width:172px}
+.tree-col-sm{display:flex;flex-direction:column;align-items:center;flex:1;min-width:clamp(88px,17vw,125px);max-width:142px}
+.conn-v{width:2px;background:linear-gradient(to bottom,var(--clr,#ccc),transparent);margin:0 auto;border-radius:2px}
+.times-sep{display:flex;align-items:center;justify-content:center;flex:0 0 clamp(28px,4vw,46px);font-family:'Playfair Display',serif;font-size:clamp(1.1rem,3vw,1.7rem);color:var(--text-3);padding-top:clamp(28px,5vw,42px);font-style:italic;user-select:none}
+
+/* INFO PANEL */
+.info-panel{max-width:740px;margin:2rem auto;background:var(--card);border:2px solid var(--accent-lt);border-radius:24px;padding:clamp(1.4rem,4vw,2.2rem) clamp(1.4rem,5vw,2.5rem);display:none;animation:fadeUp .38s ease both;box-shadow:0 8px 40px rgba(181,135,58,.12)}
+.info-panel.visible{display:block}
+.info-top{display:flex;align-items:flex-start;gap:1.1rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.info-avi{width:clamp(58px,12vw,74px);height:clamp(58px,12vw,74px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(1.7rem,4vw,2.3rem);background:var(--accent-lt);border:3px solid var(--accent);flex-shrink:0}
+.info-names{flex:1;min-width:180px}
+.info-tr{font-family:'Playfair Display',serif;font-size:clamp(1.35rem,4vw,1.9rem);font-weight:700;color:var(--text);line-height:1.2;margin-bottom:6px}
+.info-badge{display:inline-block;font-size:clamp(0.7rem,1.8vw,0.8rem);font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:100px;background:var(--accent-lt);color:var(--accent-dk);border:1px solid rgba(181,135,58,.3)}
+.info-desc{font-size:clamp(0.97rem,2.5vw,1.07rem);color:var(--text-2);line-height:1.78;margin-bottom:1.1rem}
+.info-facts{display:flex;flex-wrap:wrap;gap:8px}
+.info-fact{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:clamp(0.84rem,2vw,0.92rem);color:var(--text-2);line-height:1.5}
+.info-fact strong{display:block;font-weight:700;color:var(--text);margin-bottom:2px;font-size:clamp(0.9rem,2.2vw,0.98rem)}
+.info-close{display:block;margin:1.2rem auto 0;padding:10px 26px;border:1.5px solid var(--border);border-radius:100px;background:transparent;font-size:0.9rem;font-weight:600;color:var(--text-3);cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif}
+.info-close:hover{background:var(--bg2);color:var(--text)}
+
+/* REFERENCE */
+.ref-section{padding:5rem 1.5rem;background:var(--bg)}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.ref-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.6rem 1.8rem;box-shadow:0 2px 12px rgba(44,36,22,.06);transition:transform .22s,box-shadow .22s}
+.ref-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-h)}
+.ref-card-gen{font-size:0.74rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem;padding-bottom:.6rem;border-bottom:2px solid}
+.ref-row{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;padding:7px 0;border-bottom:1px solid var(--border)}
+.ref-row:last-child{border-bottom:none}
+.ref-tr{font-family:'Playfair Display',serif;font-size:clamp(1.02rem,2.5vw,1.18rem);font-weight:600;color:var(--text)}
+.ref-en{font-size:clamp(0.8rem,2vw,0.87rem);color:var(--text-3);text-align:right}
+
+/* TIPS */
+.tips-section{padding:5rem 1.5rem;background:var(--bg2)}
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-top:2.5rem}
+.tip-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.8rem;position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(44,36,22,.06);transition:transform .22s,box-shadow .22s}
+.tip-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-h)}
+.tip-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),transparent);border-radius:3px 3px 0 0}
+.tip-icon{font-size:clamp(1.6rem,4vw,2rem);margin-bottom:.9rem;display:block}
+.tip-title{font-family:'Playfair Display',serif;font-size:clamp(1.08rem,2.8vw,1.22rem);font-weight:700;color:var(--text);margin-bottom:.6rem}
+.tip-text{font-size:clamp(0.92rem,2.2vw,0.99rem);color:var(--text-2);line-height:1.72}
+.tip-text em{color:var(--accent-dk);font-style:normal;font-weight:700}
+
+/* QUIZ */
+.quiz-section{padding:5rem 1.5rem;background:var(--bg)}
+.quiz-box{max-width:640px;margin:2.5rem auto 0;background:var(--card);border:1px solid var(--border);border-radius:24px;padding:clamp(1.8rem,5vw,2.8rem);text-align:center;box-shadow:var(--shadow)}
+.quiz-q{font-family:'Playfair Display',serif;font-size:clamp(1.18rem,3.5vw,1.6rem);font-weight:600;color:var(--text);margin-bottom:1.8rem;line-height:1.35}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.4rem}
+.quiz-btn{padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;background:var(--bg);color:var(--text);font-size:clamp(0.92rem,2.5vw,1.02rem);font-weight:600;cursor:pointer;transition:all .18s;font-family:'Nunito',sans-serif;line-height:1.3}
+.quiz-btn:hover{background:var(--accent-lt);border-color:var(--accent);color:var(--accent-dk)}
+.quiz-btn.correct{background:#d4f5e8;border-color:#2ecc89;color:#0f6b40}
+.quiz-btn.wrong{background:#fde4e0;border-color:#e05444;color:#8a1f14}
+.quiz-feedback{font-size:clamp(0.94rem,2.5vw,1.02rem);min-height:24px;color:var(--text-2);margin-bottom:.8rem;font-weight:600}
+.quiz-next{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:1.5px solid var(--accent);border-radius:100px;font-size:clamp(0.9rem,2.2vw,0.99rem);font-weight:700;color:var(--accent-dk);background:var(--accent-lt);cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;margin-top:.4rem}
+.quiz-next:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+.quiz-score{font-size:clamp(0.8rem,2vw,0.87rem);color:var(--text-3);margin-top:1rem;font-weight:600}
+
+/* FOOTER */
+footer{padding:3rem 1.5rem;text-align:center;border-top:1px solid var(--border);background:var(--bg2)}
+footer p{font-size:clamp(0.87rem,2vw,0.97rem);color:var(--text-3)}
+footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--accent);font-size:1.08rem}
+
+/* RESPONSIVE */
+@media(max-width:500px){
+  .quiz-options{grid-template-columns:1fr}
+  .tree-row{gap:8px}
+  .tree-col,.tree-col-sm{min-width:clamp(85px,25vw,115px);max-width:130px}
+  .times-sep{flex:0 0 24px;font-size:1rem}
+  .gen-band-pill{font-size:0.68rem;padding:5px 12px}
+}
 </style>
 </head>
 <body>
 
-<!-- ╔══════════════════════════════╗ -->
-<!-- ║           HERO               ║ -->
-<!-- ╚══════════════════════════════╝ -->
+<!-- HERO -->
 <section class="hero">
   <div class="hero-bg">
     <svg viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice">
-      <!-- Animated flowing paths like 21st.dev BackgroundPaths -->
-      <path class="path-line" d="M-380 -189C-380 -189 -312 216 152 343C616 470 684 875 684 875"/>
-      <path class="path-line" d="M-340 -183C-340 -183 -272 222 162 349C626 476 694 881 694 881"/>
-      <path class="path-line" d="M-300 -177C-300 -177 -232 228 172 355C636 482 704 887 704 887"/>
-      <path class="path-line" d="M-260 -171C-260 -171 -192 234 182 361C646 488 714 893 714 893"/>
-      <path class="path-line" d="M-220 -165C-220 -165 -152 240 192 367C656 494 724 899 724 899"/>
-      <path class="path-line" d="M-180 -159C-180 -159 -112 246 202 373C666 500 734 905 734 905"/>
-      <path class="path-line" d="M-140 -153C-140 -153 -72 252 212 379C676 506 744 911 744 911"/>
-      <path class="path-line" d="M-100 -147C-100 -147 -32 258 222 385C686 512 754 917 754 917"/>
-      <path class="path-line" d="M-60 -141C-60 -141 8 264 232 391C696 518 764 923 764 923"/>
-      <path class="path-line" d="M-20 -135C-20 -135 48 270 242 397C706 524 774 929 774 929"/>
-      <path class="path-line" d="M20 -129C20 -129 88 276 252 403C716 530 784 935 784 935"/>
-      <path class="path-line" d="M60 -123C60 -123 128 282 262 409C726 536 794 941 794 941"/>
-      <!-- Mirrored paths -->
-      <path class="path-line" d="M1780 -189C1780 -189 1712 216 1248 343C784 470 716 875 716 875"/>
-      <path class="path-line" d="M1740 -183C1740 -183 1672 222 1238 349C774 476 706 881 706 881"/>
-      <path class="path-line" d="M1700 -177C1700 -177 1632 228 1228 355C764 482 696 887 696 887"/>
-      <path class="path-line" d="M1660 -171C1660 -171 1592 234 1218 361C754 488 686 893 686 893"/>
-      <path class="path-line" d="M1620 -165C1620 -165 1552 240 1208 367C654 494 676 899 676 899"/>
-      <path class="path-line" d="M1580 -159C1580 -159 1512 246 1198 373C674 500 666 905 666 905"/>
-      <path class="path-line" d="M1540 -153C1540 -153 1472 252 1188 379C664 506 656 911 656 911"/>
+      <path class="path-line" style="stroke:rgba(232,194,104,0.18)" d="M-380 -189C-380 -189 -312 216 152 343C616 470 684 875 684 875"/>
+      <path class="path-line" style="stroke:rgba(232,194,104,0.12);animation-duration:30s;animation-direction:reverse" d="M-330 -165C-330 -165 -260 238 168 362C630 488 702 893 702 893"/>
+      <path class="path-line" style="stroke:rgba(200,170,120,0.09);animation-duration:38s" d="M-280 -145C-280 -145 -206 256 178 378C640 504 718 908 718 908"/>
+      <path class="path-line" style="stroke:rgba(232,194,104,0.14);animation-duration:25s;animation-direction:reverse" d="M-240 -125C-240 -125 -154 276 188 394C648 518 734 922 734 922"/>
+      <path class="path-line" style="stroke:rgba(160,130,80,0.10);animation-duration:45s" d="M-190 -108C-190 -108 -102 295 198 408C658 533 750 937 750 937"/>
+      <path class="path-line" style="stroke:rgba(232,194,104,0.15);animation-duration:27s;animation-direction:reverse" d="M1780 -189C1780 -189 1712 216 1248 343C784 470 716 875 716 875"/>
+      <path class="path-line" style="stroke:rgba(200,170,120,0.10);animation-duration:35s" d="M1730 -162C1730 -162 1658 242 1232 370C796 502 732 902 732 902"/>
+      <path class="path-line" style="stroke:rgba(232,194,104,0.12);animation-duration:20s;animation-direction:reverse" d="M1680 -138C1680 -138 1602 262 1212 390C806 522 746 917 746 917"/>
     </svg>
   </div>
-
   <div class="hero-content">
-    <div class="hero-eyebrow">Türkçe · Turkish Language</div>
-    <h1 class="hero-title">Aile <span class="accent">Ağacı</span></h1>
+    <div class="hero-eyebrow">Türkçe · Turkish Language Guide</div>
+    <h1 class="hero-title">Aile <span class="acc">Ağacı</span></h1>
     <p class="hero-sub">
-      Discover how every member of your family is named in Turkish — from your büyükanne to your torunlar — with <em>ben</em> at the center of it all.
+      Learn what every member of your family is called in Turkish — from your
+      <strong style="color:#e8c268;font-weight:700;">büyükanne</strong> to your
+      <strong style="color:#e8c268;font-weight:700;">torunlar</strong> — with
+      <strong style="color:#e8c268;font-weight:700;">Ben</strong> at the very centre.
     </p>
     <a href="#tree" class="hero-cta">
-      Explore the tree
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 5v14M5 12l7 7 7-7"/>
-      </svg>
+      Explore the Tree
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </a>
   </div>
-
   <div class="scroll-hint">
     <span>Scroll</span>
     <div class="scroll-line"></div>
@@ -865,590 +211,331 @@
 
 <div class="divider"></div>
 
-<!-- ╔══════════════════════════════╗ -->
-<!-- ║        INTRO                 ║ -->
-<!-- ╚══════════════════════════════╝ -->
+<!-- INTRO -->
 <section class="section">
   <div class="section-label">The Foundation</div>
-  <h2 class="section-title">In Turkish,<br><em>you</em> are the center</h2>
+  <h2 class="section-title">In Turkish,<br><em>you</em> are the centre</h2>
   <p class="section-desc">
-    Every relationship in a Turkish family is described from <strong style="color:var(--text);font-weight:500;">your</strong> perspective. The word <strong style="color:var(--accent);font-weight:500;">Ben</strong> means "I" — and all names for family members reflect how they relate to you. Click any card in the tree below to learn more.
+    Every family relationship in Turkish is described from <strong style="color:var(--text);font-weight:700;">your</strong> perspective.
+    The word <strong style="color:var(--accent);font-weight:700;">Ben</strong> means "I / me" — and all family titles reflect how each person relates to you.
+    Tap any card in the tree below to discover the word, its meaning, and a memory tip.
   </p>
 </section>
 
 <div class="divider"></div>
 
-<!-- ╔══════════════════════════════╗ -->
-<!-- ║      FAMILY TREE             ║ -->
-<!-- ╚══════════════════════════════╝ -->
+<!-- FAMILY TREE -->
 <section class="tree-section" id="tree">
   <div class="tree-container">
 
     <div class="tree-header">
-      <div class="section-label">Interactive</div>
-      <h2 class="section-title" style="text-align:center;">The Family Tree</h2>
-      <p style="font-size:14px;color:var(--text-muted);max-width:440px;margin:0 auto 2.5rem;line-height:1.7;">
-        Tap any family member to learn their Turkish name, how to say it, and a tip for remembering it.
+      <div class="section-label">Interactive Family Tree</div>
+      <h2 class="section-title" style="text-align:center;">The <em>Full</em> Family</h2>
+      <p style="font-size:clamp(0.97rem,2.5vw,1.07rem);color:var(--text-2);max-width:480px;margin:0 auto 2rem;line-height:1.75;text-align:center;">
+        Five generations, all in one place. Tap any person to learn their Turkish name.
       </p>
-
       <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#7c6fcd"></div>Büyükbüyükler (Grandparents)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#4fa89a"></div>Ebeveynler (Parents)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#c9a96e"></div>Sen (You)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#c97c6e"></div>Çocuklar (Children)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#ba7517"></div>Torunlar (Grandchildren)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--g1-dot)"></div>Gen 1 · Grandparents</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--g2-dot)"></div>Gen 2 · Parents</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c9a030"></div>Gen 3 · You &amp; Siblings</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--g4-dot)"></div>Gen 4 · Children</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--g5-dot)"></div>Gen 5 · Grandchildren</div>
       </div>
     </div>
 
-    <!-- INFO PANEL (shows on card click) -->
+    <!-- INFO PANEL -->
     <div class="info-panel" id="infoPanel">
-      <div class="info-panel-header">
-        <div class="info-avatar" id="infoEmoji">👤</div>
+      <div class="info-top">
+        <div class="info-avi" id="infoEmoji">👤</div>
         <div class="info-names">
-          <div class="info-turkish" id="infoTurkish">—</div>
+          <div class="info-tr" id="infoTurkish">—</div>
           <div class="info-badge" id="infoGen">Generation</div>
         </div>
       </div>
-      <p class="info-desc" id="infoDesc">Click a family member to learn about them.</p>
+      <p class="info-desc" id="infoDesc">Tap a family member to learn about them.</p>
       <div class="info-facts" id="infoFacts"></div>
+      <button class="info-close" onclick="closeInfo()">✕ Close</button>
     </div>
 
-    <!-- GENERATION 1: GRANDPARENTS -->
-    <div class="tree-wrapper">
+    <!-- ══ GEN 1 ══ -->
+    <div class="gen-band">
+      <div class="gen-band-line" style="background:var(--g1-bd);opacity:.4"></div>
+      <div class="gen-band-pill" style="background:var(--g1-bg);color:var(--g1-tx);border:1.5px solid var(--g1-bd)">Generation 1 · Büyükbüyükler — Grandparents</div>
+      <div class="gen-band-line" style="background:var(--g1-bd);opacity:.4"></div>
+    </div>
+    <div class="tree-row">
+      <div class="tree-col"><div class="person-card g1" onclick="showInfo('anneanne')">
+        <div class="card-avatar">👵</div><div class="card-turkish">Anneanne</div>
+        <div class="card-english">Maternal grandma</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="tree-col"><div class="person-card g1" onclick="showInfo('anneannenin-dede')">
+        <div class="card-avatar">👴</div><div class="card-turkish">Dede</div>
+        <div class="card-english">Maternal grandpa</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="times-sep">×</div>
+      <div class="tree-col"><div class="person-card g1" onclick="showInfo('babaanne')">
+        <div class="card-avatar">👵</div><div class="card-turkish">Babaanne</div>
+        <div class="card-english">Paternal grandma</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="tree-col"><div class="person-card g1" onclick="showInfo('dede')">
+        <div class="card-avatar">👴</div><div class="card-turkish">Büyükbaba</div>
+        <div class="card-english">Paternal grandpa</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+    </div>
 
-      <div class="tree-row-wrap">
-        <div class="gen-label"><div class="gen-tag">Generation 1 · Büyükbüyükler</div></div>
-        <div class="gen-row">
-          <div class="drop-col">
-            <div class="person-card gen-1" onclick="showInfo('anneanne')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👵</span>
-              <div class="card-turkish">Anneanne</div>
-              <div class="card-english">Maternal grandma</div>
-            </div>
-          </div>
-          <div class="drop-col">
-            <div class="person-card gen-1" onclick="showInfo('anneannenin-dede')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👴</span>
-              <div class="card-turkish">Dede</div>
-              <div class="card-english">Maternal grandpa</div>
-            </div>
-          </div>
-          <div class="drop-col" style="min-width:40px;max-width:60px;display:flex;align-items:center;justify-content:center;">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--text-dim);">×</div>
-          </div>
-          <div class="drop-col">
-            <div class="person-card gen-1" onclick="showInfo('babaanne')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👵</span>
-              <div class="card-turkish">Babaanne</div>
-              <div class="card-english">Paternal grandma</div>
-            </div>
-          </div>
-          <div class="drop-col">
-            <div class="person-card gen-1" onclick="showInfo('dede')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👴</span>
-              <div class="card-turkish">Büyükbaba</div>
-              <div class="card-english">Paternal grandpa</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- G1→G2 connectors -->
+    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g1-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g1-bd)"></div></div>
+      <div style="flex:0 0 clamp(28px,4vw,46px)"></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g1-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g1-bd)"></div></div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:flex-end;"><div style="width:50%;height:2px;background:rgba(139,125,216,0.35)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:flex-start;"><div style="width:50%;height:2px;background:rgba(139,125,216,0.35)"></div></div>
+      <div style="flex:0 0 clamp(28px,4vw,46px)"></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:flex-end;"><div style="width:50%;height:2px;background:rgba(139,125,216,0.35)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:flex-start;"><div style="width:50%;height:2px;background:rgba(139,125,216,0.35)"></div></div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;"></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g2-bd)"></div></div>
+      <div style="flex:0 0 clamp(28px,4vw,46px)"></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g2-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;"></div>
+    </div>
 
-      <!-- connector down to parents -->
-      <div style="display:flex;gap:16px;width:100%;justify-content:center;margin:0;">
-        <div style="flex:1;min-width:130px;max-width:160px;display:flex;flex-direction:column;align-items:center;">
-          <div style="width:1px;height:18px;background:rgba(240,237,232,0.08)"></div>
-        </div>
-        <div style="flex:1;min-width:130px;max-width:160px;display:flex;flex-direction:column;align-items:center;">
-          <div style="width:1px;height:18px;background:rgba(240,237,232,0.08)"></div>
-        </div>
-        <div style="flex:1;min-width:40px;max-width:60px"></div>
-        <div style="flex:1;min-width:130px;max-width:160px;display:flex;flex-direction:column;align-items:center;">
-          <div style="width:1px;height:18px;background:rgba(240,237,232,0.08)"></div>
-        </div>
-        <div style="flex:1;min-width:130px;max-width:160px;display:flex;flex-direction:column;align-items:center;">
-          <div style="width:1px;height:18px;background:rgba(240,237,232,0.08)"></div>
-        </div>
-      </div>
-      <!-- horizontal convergence lines -->
-      <div style="display:flex;width:100%;justify-content:center;gap:16px;position:relative;height:2px;margin-bottom:0;">
-        <div style="display:flex;flex:1;min-width:130px;max-width:160px;align-items:flex-end;justify-content:center;">
-          <div style="width:50%;height:1px;background:rgba(240,237,232,0.08);align-self:flex-end;margin-left:auto;"></div>
-        </div>
-        <div style="display:flex;flex:1;min-width:130px;max-width:160px;align-items:flex-end;justify-content:center;">
-          <div style="width:50%;height:1px;background:rgba(240,237,232,0.08);align-self:flex-end;margin-right:auto;"></div>
-        </div>
-        <div style="flex:1;min-width:40px;max-width:60px;"></div>
-        <div style="display:flex;flex:1;min-width:130px;max-width:160px;align-items:flex-end;justify-content:center;">
-          <div style="width:50%;height:1px;background:rgba(240,237,232,0.08);align-self:flex-end;margin-left:auto;"></div>
-        </div>
-        <div style="display:flex;flex:1;min-width:130px;max-width:160px;align-items:flex-end;justify-content:center;">
-          <div style="width:50%;height:1px;background:rgba(240,237,232,0.08);align-self:flex-end;margin-right:auto;"></div>
-        </div>
-      </div>
+    <!-- ══ GEN 2 ══ -->
+    <div class="gen-band">
+      <div class="gen-band-line" style="background:var(--g2-bd);opacity:.4"></div>
+      <div class="gen-band-pill" style="background:var(--g2-bg);color:var(--g2-tx);border:1.5px solid var(--g2-bd)">Generation 2 · Ebeveynler — Parents</div>
+      <div class="gen-band-line" style="background:var(--g2-bd);opacity:.4"></div>
+    </div>
+    <div class="tree-row" style="justify-content:center;">
+      <div class="tree-col"><div class="person-card g2" onclick="showInfo('anne')">
+        <div class="card-avatar">👩</div><div class="card-turkish">Anne</div>
+        <div class="card-english">Mother</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="times-sep">×</div>
+      <div class="tree-col"><div class="person-card g2" onclick="showInfo('baba')">
+        <div class="card-avatar">👨</div><div class="card-turkish">Baba</div>
+        <div class="card-english">Father</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+    </div>
 
-      <!-- GENERATION 2: PARENTS -->
-      <div class="tree-row-wrap" style="margin-top:0;">
-        <div style="display:flex;gap:16px;justify-content:center;margin-bottom:0;padding-top:0;">
-          <div style="flex:1;min-width:130px;max-width:160px;display:flex;flex-direction:column;align-items:center;">
-            <div style="width:1px;height:20px;background:rgba(240,237,232,0.08)"></div>
-          </div>
-          <div style="flex:1;min-width:40px;max-width:60px;"></div>
-          <div style="flex:1;min-width:130px;max-width:160px;display:flex;flex-direction:column;align-items:center;">
-            <div style="width:1px;height:20px;background:rgba(240,237,232,0.08)"></div>
-          </div>
-        </div>
-        <div class="gen-label"><div class="gen-tag">Generation 2 · Ebeveynler</div></div>
-        <div class="gen-row" style="justify-content:center;gap:16px;">
-          <div class="drop-col">
-            <div class="person-card gen-2" onclick="showInfo('anne')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👩</span>
-              <div class="card-turkish">Anne</div>
-              <div class="card-english">Mother</div>
-            </div>
-          </div>
-          <div style="flex:0;min-width:40px;max-width:60px;display:flex;align-items:center;justify-content:center;">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--text-dim);">×</div>
-          </div>
-          <div class="drop-col">
-            <div class="person-card gen-2" onclick="showInfo('baba')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👨</span>
-              <div class="card-turkish">Baba</div>
-              <div class="card-english">Father</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- G2→G3 -->
+    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;">
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g2-bd)"></div></div>
+      <div style="flex:0 0 clamp(28px,4vw,46px)"></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g2-bd)"></div></div>
+    </div>
+    <div style="display:flex;justify-content:center;padding:0 8px;">
+      <div style="height:2px;width:min(76%,600px);background:rgba(58,170,142,0.3);border-radius:2px;"></div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+      <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g3-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g3-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--accent)"></div></div>
+      <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g3-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g3-bd)"></div></div>
+    </div>
 
-      <!-- connector down to siblings -->
-      <div style="display:flex;gap:16px;justify-content:center;">
-        <div style="flex:1;min-width:130px;max-width:160px;display:flex;justify-content:center;">
-          <div style="width:1px;height:20px;background:rgba(240,237,232,0.08)"></div>
-        </div>
-        <div style="flex:0;min-width:40px;max-width:60px;"></div>
-        <div style="flex:1;min-width:130px;max-width:160px;display:flex;justify-content:center;">
-          <div style="width:1px;height:20px;background:rgba(240,237,232,0.08)"></div>
-        </div>
-      </div>
-      <div style="width:100%;display:flex;justify-content:center;">
-        <div style="height:1px;width:min(80%,520px);background:rgba(240,237,232,0.08);"></div>
-      </div>
+    <!-- ══ GEN 3 ══ -->
+    <div class="gen-band">
+      <div class="gen-band-line" style="background:var(--g3-bd);opacity:.4"></div>
+      <div class="gen-band-pill" style="background:var(--g3-bg);color:var(--g3-tx);border:1.5px solid var(--g3-bd)">Generation 3 · Sen &amp; Kardeşlerin — You &amp; Your Siblings</div>
+      <div class="gen-band-line" style="background:var(--g3-bd);opacity:.4"></div>
+    </div>
+    <div class="tree-row" style="align-items:flex-start;">
+      <div class="tree-col-sm"><div class="person-card g3s" onclick="showInfo('agabey')">
+        <div class="card-avatar">👦</div><div class="card-turkish">Ağabey</div>
+        <div class="card-english">Older brother</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="tree-col-sm"><div class="person-card g3s" onclick="showInfo('abla')">
+        <div class="card-avatar">👧</div><div class="card-turkish">Abla</div>
+        <div class="card-english">Older sister</div><div class="card-tap">Tap to learn</div>
+      </div></div>
 
-      <!-- GENERATION 3: YOU + SIBLINGS -->
-      <div class="tree-row-wrap">
-        <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:90px;max-width:130px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(240,237,232,0.08)"></div>
-          </div>
-          <div style="flex:1;min-width:90px;max-width:130px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(240,237,232,0.08)"></div>
-          </div>
-          <div style="flex:1;min-width:90px;max-width:160px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(201,169,110,0.3)"></div>
-          </div>
-          <div style="flex:1;min-width:90px;max-width:130px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(240,237,232,0.08)"></div>
-          </div>
-          <div style="flex:1;min-width:90px;max-width:130px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(240,237,232,0.08)"></div>
-          </div>
-        </div>
-        <div class="gen-label"><div class="gen-tag">Generation 3 · Sen & Kardeşlerin</div></div>
-        <div class="gen-row" style="flex-wrap:wrap;">
-          <div class="drop-col" style="min-width:90px;max-width:130px;">
-            <div class="person-card gen-1" style="border-color:rgba(124,111,205,0.25);" onclick="showInfo('agabey')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👦</span>
-              <div class="card-turkish">Ağabey</div>
-              <div class="card-english">Older brother</div>
-            </div>
-          </div>
-          <div class="drop-col" style="min-width:90px;max-width:130px;">
-            <div class="person-card gen-1" style="border-color:rgba(124,111,205,0.25);" onclick="showInfo('abla')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👧</span>
-              <div class="card-turkish">Abla</div>
-              <div class="card-english">Older sister</div>
-            </div>
-          </div>
-          <!-- BEN — YOU -->
-          <div class="drop-col" style="min-width:130px;max-width:160px;">
-            <div class="person-card is-you" onclick="showInfo('ben')">
-              <span class="card-emoji">⭐</span>
-              <div class="card-turkish" style="color:var(--accent);font-size:1.2rem;">Ben</div>
-              <div class="card-english" style="color:rgba(201,169,110,0.7);">That's you!</div>
-            </div>
-          </div>
-          <div class="drop-col" style="min-width:90px;max-width:130px;">
-            <div class="person-card gen-1" style="border-color:rgba(124,111,205,0.25);" onclick="showInfo('erkek-kardesh')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👦</span>
-              <div class="card-turkish">Kardeş</div>
-              <div class="card-english">Younger brother</div>
-            </div>
-          </div>
-          <div class="drop-col" style="min-width:90px;max-width:130px;">
-            <div class="person-card gen-1" style="border-color:rgba(124,111,205,0.25);" onclick="showInfo('kiz-kardesh')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👧</span>
-              <div class="card-turkish">Kardeş</div>
-              <div class="card-english">Younger sister</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- YOU -->
+      <div class="tree-col"><div class="person-card you-card" onclick="showInfo('ben')">
+        <span class="you-star">⭐</span>
+        <div class="card-turkish">Ben</div>
+        <div class="card-english" style="color:var(--accent-dk);">That's you!</div>
+        <div class="card-tap" style="opacity:.45;">Tap me!</div>
+      </div></div>
 
-      <!-- connector BEN → children -->
-      <div style="display:flex;justify-content:center;">
-        <div style="width:1px;height:30px;background:linear-gradient(to bottom,rgba(201,169,110,0.35),rgba(201,169,110,0.1))"></div>
-      </div>
-      <div style="width:100%;display:flex;justify-content:center;">
-        <div style="height:1px;width:min(60%,380px);background:rgba(201,169,110,0.12);"></div>
-      </div>
+      <div class="tree-col-sm"><div class="person-card g3s" onclick="showInfo('erkek-kardesh')">
+        <div class="card-avatar">👦</div><div class="card-turkish">Erkek Kardeş</div>
+        <div class="card-english">Younger brother</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="tree-col-sm"><div class="person-card g3s" onclick="showInfo('kiz-kardesh')">
+        <div class="card-avatar">👧</div><div class="card-turkish">Kız Kardeş</div>
+        <div class="card-english">Younger sister</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+    </div>
 
-      <!-- GENERATION 4: CHILDREN -->
-      <div class="tree-row-wrap">
-        <div style="display:flex;justify-content:center;gap:16px;">
-          <div style="flex:1;min-width:130px;max-width:160px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(201,124,110,0.25)"></div>
-          </div>
-          <div style="flex:1;min-width:130px;max-width:160px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(201,124,110,0.25)"></div>
-          </div>
-          <div style="flex:1;min-width:130px;max-width:160px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(201,124,110,0.25)"></div>
-          </div>
-        </div>
-        <div class="gen-label"><div class="gen-tag">Generation 4 · Çocukların</div></div>
-        <div class="gen-row">
-          <div class="drop-col">
-            <div class="person-card gen-4" onclick="showInfo('ogul')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👦</span>
-              <div class="card-turkish">Oğul</div>
-              <div class="card-english">Son</div>
-            </div>
-          </div>
-          <div class="drop-col">
-            <div class="person-card gen-4" onclick="showInfo('kiz')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👧</span>
-              <div class="card-turkish">Kız</div>
-              <div class="card-english">Daughter</div>
-            </div>
-          </div>
-          <div class="drop-col">
-            <div class="person-card gen-4" onclick="showInfo('ogul')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👦</span>
-              <div class="card-turkish">Oğul</div>
-              <div class="card-english">Son</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- BEN→G4 -->
+    <div style="display:flex;justify-content:center;"><div class="conn-v" style="height:20px;--clr:var(--accent)"></div></div>
+    <div style="display:flex;justify-content:center;"><div style="height:2px;width:min(52%,360px);background:rgba(201,148,26,0.35);border-radius:2px;"></div></div>
+    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g4-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g4-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g4-bd)"></div></div>
+    </div>
 
-      <!-- connector → grandchildren -->
-      <div style="display:flex;gap:16px;justify-content:center;">
-        <div style="flex:1;min-width:130px;max-width:160px;display:flex;justify-content:center;">
-          <div style="width:1px;height:20px;background:rgba(186,117,23,0.2)"></div>
-        </div>
-        <div style="flex:1;min-width:130px;max-width:160px;display:flex;justify-content:center;">
-          <div style="width:1px;height:20px;background:rgba(186,117,23,0.2)"></div>
-        </div>
-        <div style="flex:1;min-width:130px;max-width:160px;display:flex;justify-content:center;">
-          <div style="width:1px;height:20px;background:rgba(186,117,23,0.2)"></div>
-        </div>
-      </div>
-      <div style="width:100%;display:flex;justify-content:center;">
-        <div style="height:1px;width:min(75%,480px);background:rgba(186,117,23,0.12);"></div>
-      </div>
+    <!-- ══ GEN 4 ══ -->
+    <div class="gen-band">
+      <div class="gen-band-line" style="background:var(--g4-bd);opacity:.4"></div>
+      <div class="gen-band-pill" style="background:var(--g4-bg);color:var(--g4-tx);border:1.5px solid var(--g4-bd)">Generation 4 · Çocukların — Your Children</div>
+      <div class="gen-band-line" style="background:var(--g4-bd);opacity:.4"></div>
+    </div>
+    <div class="tree-row" style="justify-content:center;">
+      <div class="tree-col"><div class="person-card g4" onclick="showInfo('ogul')">
+        <div class="card-avatar">👦</div><div class="card-turkish">Oğul</div>
+        <div class="card-english">Son</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="tree-col"><div class="person-card g4" onclick="showInfo('kiz')">
+        <div class="card-avatar">👧</div><div class="card-turkish">Kız</div>
+        <div class="card-english">Daughter</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="tree-col"><div class="person-card g4" onclick="showInfo('ogul')">
+        <div class="card-avatar">👦</div><div class="card-turkish">Oğul</div>
+        <div class="card-english">Son</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+    </div>
 
-      <!-- GENERATION 5: GRANDCHILDREN -->
-      <div class="tree-row-wrap">
-        <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:100px;max-width:130px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(186,117,23,0.18)"></div>
-          </div>
-          <div style="flex:1;min-width:100px;max-width:130px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(186,117,23,0.18)"></div>
-          </div>
-          <div style="flex:1;min-width:100px;max-width:130px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(186,117,23,0.18)"></div>
-          </div>
-          <div style="flex:1;min-width:100px;max-width:130px;display:flex;justify-content:center;">
-            <div style="width:1px;height:20px;background:rgba(186,117,23,0.18)"></div>
-          </div>
-        </div>
-        <div class="gen-label"><div class="gen-tag">Generation 5 · Torunların</div></div>
-        <div class="gen-row" style="flex-wrap:wrap;gap:10px;">
-          <div class="drop-col" style="min-width:100px;max-width:130px;">
-            <div class="person-card gen-5" onclick="showInfo('torun-k')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👶</span>
-              <div class="card-turkish">Torun</div>
-              <div class="card-english">Granddaughter</div>
-            </div>
-          </div>
-          <div class="drop-col" style="min-width:100px;max-width:130px;">
-            <div class="person-card gen-5" onclick="showInfo('torun-o')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👶</span>
-              <div class="card-turkish">Torun</div>
-              <div class="card-english">Grandson</div>
-            </div>
-          </div>
-          <div class="drop-col" style="min-width:100px;max-width:130px;">
-            <div class="person-card gen-5" onclick="showInfo('torun-o')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👶</span>
-              <div class="card-turkish">Torun</div>
-              <div class="card-english">Grandchild</div>
-            </div>
-          </div>
-          <div class="drop-col" style="min-width:100px;max-width:130px;">
-            <div class="person-card gen-5" onclick="showInfo('torun-k')">
-              <div class="card-dot"></div>
-              <span class="card-emoji">👶</span>
-              <div class="card-turkish">Torun</div>
-              <div class="card-english">Grandchild</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- G4→G5 -->
+    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g4-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g4-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g4-bd)"></div></div>
+    </div>
+    <div style="display:flex;justify-content:center;"><div style="height:2px;width:min(68%,450px);background:rgba(201,160,16,0.3);border-radius:2px;"></div></div>
+    <div style="display:flex;justify-content:center;gap:clamp(8px,1.5vw,18px);flex-wrap:wrap;padding:0 8px;">
+      <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g5-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g5-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g5-bd)"></div></div>
+      <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g5-bd)"></div></div>
+    </div>
 
-    </div><!-- end tree-wrapper -->
-  </div>
+    <!-- ══ GEN 5 ══ -->
+    <div class="gen-band">
+      <div class="gen-band-line" style="background:var(--g5-bd);opacity:.4"></div>
+      <div class="gen-band-pill" style="background:var(--g5-bg);color:var(--g5-tx);border:1.5px solid var(--g5-bd)">Generation 5 · Torunların — Your Grandchildren</div>
+      <div class="gen-band-line" style="background:var(--g5-bd);opacity:.4"></div>
+    </div>
+    <div class="tree-row" style="justify-content:center;gap:clamp(8px,1.5vw,18px);">
+      <div class="tree-col-sm"><div class="person-card g5" onclick="showInfo('torun-k')">
+        <div class="card-avatar">👶</div><div class="card-turkish">Torun</div>
+        <div class="card-english">Granddaughter</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="tree-col-sm"><div class="person-card g5" onclick="showInfo('torun-o')">
+        <div class="card-avatar">👶</div><div class="card-turkish">Torun</div>
+        <div class="card-english">Grandson</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="tree-col-sm"><div class="person-card g5" onclick="showInfo('torun-k')">
+        <div class="card-avatar">👶</div><div class="card-turkish">Torun</div>
+        <div class="card-english">Grandchild</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+      <div class="tree-col-sm"><div class="person-card g5" onclick="showInfo('torun-o')">
+        <div class="card-avatar">👶</div><div class="card-turkish">Torun</div>
+        <div class="card-english">Grandchild</div><div class="card-tap">Tap to learn</div>
+      </div></div>
+    </div>
+
+  </div><!-- /tree-container -->
 </section>
 
 <div class="divider"></div>
 
-<!-- ╔══════════════════════════════╗ -->
-<!-- ║      REFERENCE TABLE         ║ -->
-<!-- ╚══════════════════════════════╝ -->
+<!-- REFERENCE TABLE -->
 <section class="ref-section">
-  <div class="section" style="padding-top:0;padding-bottom:3rem;">
+  <div class="section" style="padding-bottom:2rem;">
     <div class="section-label">Full Reference</div>
     <h2 class="section-title">Every word,<br><em>at a glance</em></h2>
-    <p class="section-desc">A complete glossary of Turkish family terms from your perspective as <em style="color:var(--accent);">Ben</em>.</p>
-
+    <p class="section-desc">A complete glossary of Turkish family terms — all from your perspective as <strong style="color:var(--accent);font-weight:700;">Ben</strong>.</p>
     <div class="ref-grid">
-
       <div class="ref-card">
-        <div class="ref-card-gen" style="color:rgba(124,111,205,0.6);">● Grandparents · Büyükbüyükler</div>
-        <div class="ref-row">
-          <span class="ref-tr">Anneanne</span>
-          <span class="ref-en">Mother's mother</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Büyükanne</span>
-          <span class="ref-en">Grandmother (general)</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Babaanne</span>
-          <span class="ref-en">Father's mother</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Dede</span>
-          <span class="ref-en">Grandfather</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Büyükbaba</span>
-          <span class="ref-en">Grandfather (general)</span>
-        </div>
+        <div class="ref-card-gen" style="color:var(--g1-tx);border-color:var(--g1-bd);">● Grandparents · Büyükbüyükler</div>
+        <div class="ref-row"><span class="ref-tr">Anneanne</span><span class="ref-en">Mother's mother</span></div>
+        <div class="ref-row"><span class="ref-tr">Büyükanne</span><span class="ref-en">Grandmother (general)</span></div>
+        <div class="ref-row"><span class="ref-tr">Babaanne</span><span class="ref-en">Father's mother</span></div>
+        <div class="ref-row"><span class="ref-tr">Dede</span><span class="ref-en">Grandfather</span></div>
+        <div class="ref-row"><span class="ref-tr">Büyükbaba</span><span class="ref-en">Grandfather (formal)</span></div>
       </div>
-
       <div class="ref-card">
-        <div class="ref-card-gen" style="color:rgba(79,168,154,0.6);">● Parents · Ebeveynler</div>
-        <div class="ref-row">
-          <span class="ref-tr">Anne</span>
-          <span class="ref-en">Mother</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Annem</span>
-          <span class="ref-en">My mother</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Baba</span>
-          <span class="ref-en">Father</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Babam</span>
-          <span class="ref-en">My father</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Ebeveynler</span>
-          <span class="ref-en">Parents (plural)</span>
-        </div>
+        <div class="ref-card-gen" style="color:var(--g2-tx);border-color:var(--g2-bd);">● Parents · Ebeveynler</div>
+        <div class="ref-row"><span class="ref-tr">Anne</span><span class="ref-en">Mother</span></div>
+        <div class="ref-row"><span class="ref-tr">Annem</span><span class="ref-en">My mother</span></div>
+        <div class="ref-row"><span class="ref-tr">Baba</span><span class="ref-en">Father</span></div>
+        <div class="ref-row"><span class="ref-tr">Babam</span><span class="ref-en">My father</span></div>
+        <div class="ref-row"><span class="ref-tr">Ebeveynler</span><span class="ref-en">Parents (plural)</span></div>
       </div>
-
       <div class="ref-card">
-        <div class="ref-card-gen" style="color:rgba(201,169,110,0.6);">⭐ You · Sen</div>
-        <div class="ref-row">
-          <span class="ref-tr">Ben</span>
-          <span class="ref-en">I / Me</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Sen</span>
-          <span class="ref-en">You</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Ağabey / Abi</span>
-          <span class="ref-en">Older brother</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Abla</span>
-          <span class="ref-en">Older sister</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Erkek kardeş</span>
-          <span class="ref-en">Younger brother</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Kız kardeş</span>
-          <span class="ref-en">Younger sister</span>
-        </div>
+        <div class="ref-card-gen" style="color:var(--accent-dk);border-color:var(--accent);">⭐ You · Sen &amp; Kardeşler</div>
+        <div class="ref-row"><span class="ref-tr">Ben</span><span class="ref-en">I / Me</span></div>
+        <div class="ref-row"><span class="ref-tr">Ağabey / Abi</span><span class="ref-en">Older brother</span></div>
+        <div class="ref-row"><span class="ref-tr">Abla</span><span class="ref-en">Older sister</span></div>
+        <div class="ref-row"><span class="ref-tr">Erkek kardeş</span><span class="ref-en">Younger brother</span></div>
+        <div class="ref-row"><span class="ref-tr">Kız kardeş</span><span class="ref-en">Younger sister</span></div>
       </div>
-
       <div class="ref-card">
-        <div class="ref-card-gen" style="color:rgba(201,124,110,0.6);">● Children · Çocuklar</div>
-        <div class="ref-row">
-          <span class="ref-tr">Oğul</span>
-          <span class="ref-en">Son</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Oğlum</span>
-          <span class="ref-en">My son</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Kız</span>
-          <span class="ref-en">Daughter</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Kızım</span>
-          <span class="ref-en">My daughter</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Çocuk / Çocuklar</span>
-          <span class="ref-en">Child / Children</span>
-        </div>
+        <div class="ref-card-gen" style="color:var(--g4-tx);border-color:var(--g4-bd);">● Children · Çocuklar</div>
+        <div class="ref-row"><span class="ref-tr">Oğul</span><span class="ref-en">Son</span></div>
+        <div class="ref-row"><span class="ref-tr">Oğlum</span><span class="ref-en">My son</span></div>
+        <div class="ref-row"><span class="ref-tr">Kız</span><span class="ref-en">Daughter</span></div>
+        <div class="ref-row"><span class="ref-tr">Kızım</span><span class="ref-en">My daughter</span></div>
+        <div class="ref-row"><span class="ref-tr">Çocuklar</span><span class="ref-en">Children (plural)</span></div>
       </div>
-
       <div class="ref-card">
-        <div class="ref-card-gen" style="color:rgba(186,117,23,0.6);">● Grandchildren · Torunlar</div>
-        <div class="ref-row">
-          <span class="ref-tr">Torun</span>
-          <span class="ref-en">Grandchild</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Torunum</span>
-          <span class="ref-en">My grandchild</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Torun kız</span>
-          <span class="ref-en">Granddaughter</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Torun oğlan</span>
-          <span class="ref-en">Grandson</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Torunlar</span>
-          <span class="ref-en">Grandchildren</span>
-        </div>
+        <div class="ref-card-gen" style="color:var(--g5-tx);border-color:var(--g5-bd);">● Grandchildren · Torunlar</div>
+        <div class="ref-row"><span class="ref-tr">Torun</span><span class="ref-en">Grandchild</span></div>
+        <div class="ref-row"><span class="ref-tr">Torunum</span><span class="ref-en">My grandchild</span></div>
+        <div class="ref-row"><span class="ref-tr">Torun kız</span><span class="ref-en">Granddaughter</span></div>
+        <div class="ref-row"><span class="ref-tr">Torun oğlan</span><span class="ref-en">Grandson</span></div>
+        <div class="ref-row"><span class="ref-tr">Torunlar</span><span class="ref-en">Grandchildren</span></div>
       </div>
-
       <div class="ref-card">
-        <div class="ref-card-gen" style="color:rgba(140,140,140,0.5);">◆ Extended · Akrabalar</div>
-        <div class="ref-row">
-          <span class="ref-tr">Amca</span>
-          <span class="ref-en">Father's brother</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Dayı</span>
-          <span class="ref-en">Mother's brother</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Hala</span>
-          <span class="ref-en">Father's sister</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Teyze</span>
-          <span class="ref-en">Mother's sister</span>
-        </div>
-        <div class="ref-row">
-          <span class="ref-tr">Kuzen</span>
-          <span class="ref-en">Cousin</span>
-        </div>
+        <div class="ref-card-gen" style="color:var(--text-3);border-color:var(--border);">◆ Extended · Akrabalar</div>
+        <div class="ref-row"><span class="ref-tr">Amca</span><span class="ref-en">Father's brother</span></div>
+        <div class="ref-row"><span class="ref-tr">Dayı</span><span class="ref-en">Mother's brother</span></div>
+        <div class="ref-row"><span class="ref-tr">Hala</span><span class="ref-en">Father's sister</span></div>
+        <div class="ref-row"><span class="ref-tr">Teyze</span><span class="ref-en">Mother's sister</span></div>
+        <div class="ref-row"><span class="ref-tr">Kuzen</span><span class="ref-en">Cousin</span></div>
       </div>
-
     </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- ╔══════════════════════════════╗ -->
-<!-- ║         TIPS                 ║ -->
-<!-- ╚══════════════════════════════╝ -->
+<!-- TIPS -->
 <section class="tips-section">
-  <div class="section" style="padding-top:0;">
+  <div class="section" style="padding-bottom:2rem;">
     <div class="section-label">Memory Tips</div>
     <h2 class="section-title">How to <em>remember</em></h2>
-
     <div class="tips-grid">
-      <div class="tip-card">
-        <div class="tip-icon">🔑</div>
-        <div class="tip-title">Age defines siblings</div>
-        <p class="tip-text">Turkish has separate words for older vs younger siblings. <em style="color:var(--accent)">Ağabey / Abi</em> = older brother, <em style="color:var(--accent)">Abla</em> = older sister. Younger ones are just <em style="color:var(--accent)">kardeş</em> with a gender prefix.</p>
-      </div>
-      <div class="tip-card">
-        <div class="tip-icon">🌿</div>
-        <div class="tip-title">Anneanne = Anne's Anne</div>
-        <p class="tip-text">The word builds itself! <em style="color:var(--accent)">Anne</em> means mother, so <em style="color:var(--accent)">Anneanne</em> is literally "mother's mother." Same logic: <em style="color:var(--accent)">Babaanne</em> is from <em style="color:var(--accent)">Baba</em> (father).</p>
-      </div>
-      <div class="tip-card">
-        <div class="tip-icon">💬</div>
-        <div class="tip-title">-m suffix = "my"</div>
-        <p class="tip-text">Add <em style="color:var(--accent)">-m</em> or <em style="color:var(--accent)">-ım</em> to make it possessive. <em style="color:var(--accent)">Anne</em> → <em style="color:var(--accent)">Annem</em> (my mother). <em style="color:var(--accent)">Oğul</em> → <em style="color:var(--accent)">Oğlum</em> (my son). Very common in everyday speech.</p>
-      </div>
-      <div class="tip-card">
-        <div class="tip-icon">🌳</div>
-        <div class="tip-title">Büyük = Big</div>
-        <p class="tip-text"><em style="color:var(--accent)">Büyük</em> means big/great in Turkish. So <em style="color:var(--accent)">Büyükanne</em> = "big mother" (grandmother) and <em style="color:var(--accent)">Büyükbaba</em> = "big father" (grandfather). Poetic and logical!</p>
-      </div>
-      <div class="tip-card">
-        <div class="tip-icon">🎯</div>
-        <div class="tip-title">Dede is just Dede</div>
-        <p class="tip-text"><em style="color:var(--accent)">Dede</em> is the most common word for grandfather — warm and familiar, like "grandpa." It's used by children and adults alike, often for both maternal and paternal grandfathers.</p>
-      </div>
-      <div class="tip-card">
-        <div class="tip-icon">👶</div>
-        <div class="tip-title">Torun completes the circle</div>
-        <p class="tip-text">Your grandchildren call you <em style="color:var(--accent)">Büyükanne</em> or <em style="color:var(--accent)">Büyükbaba</em> — the same words you used for your own grandparents. The family tree truly cycles.</p>
-      </div>
+      <div class="tip-card"><span class="tip-icon">🔑</span><div class="tip-title">Age defines siblings</div><p class="tip-text">Turkish has separate words for older vs younger siblings. <em>Ağabey / Abi</em> = older brother, <em>Abla</em> = older sister. Younger ones are just <em>kardeş</em> with a gender prefix.</p></div>
+      <div class="tip-card"><span class="tip-icon">🌿</span><div class="tip-title">Anneanne = Anne's Anne</div><p class="tip-text">The word literally builds itself. <em>Anne</em> = mother, so <em>Anneanne</em> = "mother's mother." Same logic: <em>Babaanne</em> = father's mother (from <em>Baba</em>).</p></div>
+      <div class="tip-card"><span class="tip-icon">💬</span><div class="tip-title">The -m suffix means "my"</div><p class="tip-text">Add <em>-m</em> or <em>-ım</em> to make it possessive. <em>Anne → Annem</em> (my mother). <em>Oğul → Oğlum</em> (my son). You'll hear this constantly in everyday Turkish.</p></div>
+      <div class="tip-card"><span class="tip-icon">🌳</span><div class="tip-title">Büyük = Big / Great</div><p class="tip-text"><em>Büyük</em> means big or great. So <em>Büyükanne</em> = "great mother" (grandmother) and <em>Büyükbaba</em> = "great father" (grandfather). Poetic and logical!</p></div>
+      <div class="tip-card"><span class="tip-icon">🎯</span><div class="tip-title">Dede is universal</div><p class="tip-text"><em>Dede</em> is the warmest, most common word for grandfather — like saying "grandpa." It works for both maternal and paternal grandfathers in everyday life.</p></div>
+      <div class="tip-card"><span class="tip-icon">👶</span><div class="tip-title">Torun completes the cycle</div><p class="tip-text">Your grandchildren call you <em>Büyükanne</em> or <em>Büyükbaba</em> — the very same words you used for your own grandparents. The family tree beautifully comes full circle.</p></div>
     </div>
   </div>
 </section>
 
 <div class="divider"></div>
 
-<!-- ╔══════════════════════════════╗ -->
-<!-- ║           QUIZ               ║ -->
-<!-- ╚══════════════════════════════╝ -->
+<!-- QUIZ -->
 <section class="quiz-section">
-  <div class="section" style="padding-top:0;">
+  <div class="section" style="padding-bottom:2rem;">
     <div class="section-label">Test Yourself</div>
     <h2 class="section-title">Quick <em>Quiz</em></h2>
-    <p class="section-desc">See how well you know your Turkish family words.</p>
-
+    <p class="section-desc">See how well you know your Turkish family words!</p>
     <div class="quiz-box">
-      <div class="quiz-q" id="quizQ">Loading question...</div>
+      <div class="quiz-q" id="quizQ">Loading question…</div>
       <div class="quiz-options" id="quizOpts"></div>
       <div class="quiz-feedback" id="quizFb"></div>
       <button class="quiz-next" id="quizNext" onclick="nextQ()" style="display:none;">Next question →</button>
@@ -1457,278 +544,97 @@
   </div>
 </section>
 
-<!-- ╔══════════════════════════════╗ -->
-<!-- ║          FOOTER              ║ -->
-<!-- ╚══════════════════════════════╝ -->
+<!-- FOOTER -->
 <footer>
-  <p>Made with care for learning Turkish · <span class="footer-word">Aile ağacı güzeldir</span></p>
-  <p style="margin-top:8px;font-size:11px;color:rgba(240,237,232,0.15);">The family tree is beautiful</p>
+  <p>Made with care for learning Turkish · <span class="fw">Aile ağacı güzeldir</span></p>
+  <p style="margin-top:8px;font-size:0.82rem;color:var(--text-3);opacity:.6;">"The family tree is beautiful"</p>
 </footer>
 
 <script>
-// ─── FAMILY DATA ───
 const familyData = {
-  ben: {
-    emoji: '⭐',
-    turkish: 'Ben — Sen!',
-    english: 'That\'s YOU',
-    gen: 'Generation 3 · The Center',
-    desc: 'Ben means "I" or "me" in Turkish, and Sen means "you." You are the reference point for the entire family tree — every other member\'s name describes how they relate to you personally.',
-    facts: [
-      { label: 'Pronouns', value: 'Ben (I), Sen (you), O (he/she)' },
-      { label: 'Your role', value: 'Center of the family tree' },
-      { label: 'Possessive', value: 'Add -im / -ım to make things "mine"' },
-    ]
-  },
-  anne: {
-    emoji: '👩',
-    turkish: 'Anne · Annem',
-    english: 'Mother',
-    gen: 'Generation 2 · Ebeveynler',
-    desc: 'Anne is the Turkish word for mother. When speaking about your own mother, you say Annem (my mother). It is one of the first words Turkish children learn, warm and universal across the language.',
-    facts: [
-      { label: 'Formal', value: 'Anne' },
-      { label: 'Possessive', value: 'Annem (my mother)' },
-      { label: 'Memory tip', value: '"Anne" sounds like the name — easy to remember!' },
-    ]
-  },
-  baba: {
-    emoji: '👨',
-    turkish: 'Baba · Babam',
-    english: 'Father',
-    gen: 'Generation 2 · Ebeveynler',
-    desc: 'Baba means father in Turkish — and interestingly, this word exists in dozens of languages worldwide. Babam means "my father." Very similar to how many children naturally say "baba" as one of their first words.',
-    facts: [
-      { label: 'Formal', value: 'Baba' },
-      { label: 'Possessive', value: 'Babam (my father)' },
-      { label: 'Fun fact', value: '"Baba" is one of the most universal words across human languages' },
-    ]
-  },
-  anneanne: {
-    emoji: '👵',
-    turkish: 'Anneanne · Büyükanne',
-    english: 'Maternal Grandmother',
-    gen: 'Generation 1 · Büyükbüyükler',
-    desc: 'Anneanne is your mother\'s mother. The word literally means "mother\'s mother" — Anne + Anne. An alternative is Büyükanne (büyük = big/great, anne = mother), used as a general term for grandmother.',
-    facts: [
-      { label: 'Literal meaning', value: 'Anne + Anne = Mother\'s mother' },
-      { label: 'General term', value: 'Büyükanne (great mother)' },
-      { label: 'Informal', value: 'Nene (very warm, affectionate)' },
-    ]
-  },
-  'anneannenin-dede': {
-    emoji: '👴',
-    turkish: 'Dede · Büyükbaba',
-    english: 'Maternal Grandfather',
-    gen: 'Generation 1 · Büyükbüyükler',
-    desc: 'Your mother\'s father is called Dede — the most beloved, familiar word for grandfather. Büyükbaba (büyük = big, baba = father) is the formal equivalent. Dede is warm and universally used across Turkey.',
-    facts: [
-      { label: 'Common name', value: 'Dede' },
-      { label: 'Formal', value: 'Büyükbaba (great father)' },
-      { label: 'Usage', value: 'Most children just call him Dede' },
-    ]
-  },
-  babaanne: {
-    emoji: '👵',
-    turkish: 'Babaanne',
-    english: 'Paternal Grandmother',
-    gen: 'Generation 1 · Büyükbüyükler',
-    desc: 'Babaanne is your father\'s mother — Baba + Anne. Just like Anneanne tells you it\'s from your mother\'s side, Babaanne tells you it\'s from your father\'s side. Turkish grandparent names are wonderfully logical.',
-    facts: [
-      { label: 'Literal meaning', value: 'Baba + Anne = Father\'s mother' },
-      { label: 'Contrast with', value: 'Anneanne (mother\'s mother)' },
-      { label: 'General term', value: 'Büyükanne works for both' },
-    ]
-  },
-  dede: {
-    emoji: '👴',
-    turkish: 'Büyükbaba · Dede',
-    english: 'Paternal Grandfather',
-    gen: 'Generation 1 · Büyükbüyükler',
-    desc: 'Your father\'s father is also called Dede, just like your maternal grandfather. Both grandfathers share this affectionate title. The formal term Büyükbaba (big father) applies to both sides as well.',
-    facts: [
-      { label: 'Common name', value: 'Dede (both sides)' },
-      { label: 'Formal', value: 'Büyükbaba' },
-      { label: 'Possessive', value: 'Dedem (my grandfather)' },
-    ]
-  },
-  agabey: {
-    emoji: '👦',
-    turkish: 'Ağabey · Abi',
-    english: 'Older Brother',
-    gen: 'Generation 3 · Kardeşler',
-    desc: 'In Turkish, your older brother is specifically called Ağabey (often shortened to Abi in casual speech). This is a term of respect — younger siblings always use it when addressing an older brother, never just his name alone.',
-    facts: [
-      { label: 'Full form', value: 'Ağabey' },
-      { label: 'Casual form', value: 'Abi (very common)' },
-      { label: 'Cultural note', value: 'Always used as a respectful title, like "big bro"' },
-    ]
-  },
-  abla: {
-    emoji: '👧',
-    turkish: 'Abla',
-    english: 'Older Sister',
-    gen: 'Generation 3 · Kardeşler',
-    desc: 'Abla is the Turkish word for older sister. Like Ağabey for brothers, this term carries respect — younger siblings address their older sister as Abla, often even adding it after her name (e.g., "Ayşe Abla"). It is also used for older women outside the family as a polite address.',
-    facts: [
-      { label: 'Word', value: 'Abla' },
-      { label: 'Used for', value: 'Older sister (biological or respectful)' },
-      { label: 'Outside family', value: 'Polite address for older women' },
-    ]
-  },
-  'erkek-kardesh': {
-    emoji: '👦',
-    turkish: 'Erkek Kardeş',
-    english: 'Younger Brother',
-    gen: 'Generation 3 · Kardeşler',
-    desc: 'A younger brother is Erkek Kardeş in Turkish — Erkek means male, Kardeş means sibling. The older brother gets the special title Ağabey, but for a younger brother you simply say Erkek Kardeş or just Kardeş.',
-    facts: [
-      { label: 'Full term', value: 'Erkek Kardeş' },
-      { label: 'Erkek =', value: 'Male / Man' },
-      { label: 'Kardeş =', value: 'Sibling' },
-    ]
-  },
-  'kiz-kardesh': {
-    emoji: '👧',
-    turkish: 'Kız Kardeş',
-    english: 'Younger Sister',
-    gen: 'Generation 3 · Kardeşler',
-    desc: 'A younger sister is Kız Kardeş — Kız means girl or daughter. Older sisters are called Abla (a special title), while younger sisters are simply Kız Kardeş. Both are kardeş (siblings), but age determines the title.',
-    facts: [
-      { label: 'Full term', value: 'Kız Kardeş' },
-      { label: 'Kız =', value: 'Girl / Daughter' },
-      { label: 'Compare', value: 'Abla = older sister (special title)' },
-    ]
-  },
-  ogul: {
-    emoji: '👦',
-    turkish: 'Oğul · Oğlum',
-    english: 'Son',
-    gen: 'Generation 4 · Çocuklar',
-    desc: 'Oğul is the word for son in Turkish. When you refer to your own son, you say Oğlum (my son). It is a word full of pride and warmth in Turkish culture — "Oğlum" is one of the most affectionate terms a parent uses.',
-    facts: [
-      { label: 'Base word', value: 'Oğul (son)' },
-      { label: 'My son', value: 'Oğlum' },
-      { label: 'Plural', value: 'Oğullar (sons)' },
-    ]
-  },
-  kiz: {
-    emoji: '👧',
-    turkish: 'Kız · Kızım',
-    english: 'Daughter',
-    gen: 'Generation 4 · Çocuklar',
-    desc: 'Kız means both girl and daughter in Turkish — context makes the meaning clear. Your daughter is Kızım (my daughter). Kız is also used in Kız Kardeş (sister), showing how the word weaves through the family.',
-    facts: [
-      { label: 'Word', value: 'Kız (girl / daughter)' },
-      { label: 'My daughter', value: 'Kızım' },
-      { label: 'Note', value: 'Same word as in Kız Kardeş (younger sister)' },
-    ]
-  },
-  'torun-k': {
-    emoji: '👶',
-    turkish: 'Torun · Torunum',
-    english: 'Granddaughter',
-    gen: 'Generation 5 · Torunlar',
-    desc: 'Your grandchildren are Torunlar. A granddaughter can be called Torun Kız and a grandson Torun Oğlan, but most often just Torun is used for any grandchild. Torunum means "my grandchild" — the word every grandparent loves.',
-    facts: [
-      { label: 'General', value: 'Torun (grandchild)' },
-      { label: 'Granddaughter', value: 'Torun Kız' },
-      { label: 'My grandchild', value: 'Torunum' },
-    ]
-  },
-  'torun-o': {
-    emoji: '👶',
-    turkish: 'Torun · Torunum',
-    english: 'Grandson',
-    gen: 'Generation 5 · Torunlar',
-    desc: 'A grandson is Torun Oğlan in Turkish. As a grandparent, your grandchildren call you Büyükanne or Büyükbaba — completing the beautiful circle of the family tree. Torunlar (plural) is one of the most joyful words in Turkish.',
-    facts: [
-      { label: 'Grandson', value: 'Torun Oğlan' },
-      { label: 'Plural', value: 'Torunlar (grandchildren)' },
-      { label: 'You are their', value: 'Büyükanne or Büyükbaba' },
-    ]
-  },
+  ben:{emoji:'⭐',turkish:'Ben — Sen!',gen:'Generation 3 · The Centre',desc:'Ben means "I" or "me" in Turkish, and Sen means "you." You are the reference point for the entire family tree — every other member\'s title describes how they relate to you personally.',facts:[{label:'Pronouns',value:'Ben (I), Sen (you), O (he/she)'},{label:'Your role',value:'Centre of the family tree'},{label:'Possessive',value:'Add -im / -ım to make things "mine"'}]},
+  anne:{emoji:'👩',turkish:'Anne · Annem',gen:'Generation 2 · Ebeveynler',desc:'Anne is the Turkish word for mother. When speaking about your own mother you say Annem (my mother). It is one of the first words Turkish children learn — warm and universally understood.',facts:[{label:'Formal',value:'Anne'},{label:'Possessive',value:'Annem (my mother)'},{label:'Memory tip',value:'"Anne" sounds like a name — super easy to remember!'}]},
+  baba:{emoji:'👨',turkish:'Baba · Babam',gen:'Generation 2 · Ebeveynler',desc:'Baba means father in Turkish — and this word exists in dozens of languages worldwide. Babam means "my father." Very similar to how children naturally say "baba" as one of their first words.',facts:[{label:'Formal',value:'Baba'},{label:'Possessive',value:'Babam (my father)'},{label:'Fun fact',value:'"Baba" is one of the most universal words across all human languages'}]},
+  anneanne:{emoji:'👵',turkish:'Anneanne · Büyükanne',gen:'Generation 1 · Büyükbüyükler',desc:'Anneanne is your mother\'s mother. The word literally means "mother\'s mother" — Anne + Anne. An alternative is Büyükanne (büyük = big/great, anne = mother), used as a general term for grandmother.',facts:[{label:'Literal meaning',value:'Anne + Anne = Mother\'s mother'},{label:'General term',value:'Büyükanne (great mother)'},{label:'Informal',value:'Nene (very warm, affectionate)'}]},
+  'anneannenin-dede':{emoji:'👴',turkish:'Dede · Büyükbaba',gen:'Generation 1 · Büyükbüyükler',desc:'Your mother\'s father is called Dede — the most beloved, familiar word for grandfather. Büyükbaba (büyük = big, baba = father) is the formal equivalent. Dede is warm and universally used across Turkey.',facts:[{label:'Common name',value:'Dede'},{label:'Formal',value:'Büyükbaba (great father)'},{label:'Usage',value:'Most children just call him Dede'}]},
+  babaanne:{emoji:'👵',turkish:'Babaanne',gen:'Generation 1 · Büyükbüyükler',desc:'Babaanne is your father\'s mother — Baba + Anne. Just like Anneanne tells you it\'s from your mother\'s side, Babaanne tells you it\'s from your father\'s side. Turkish grandparent names are wonderfully logical!',facts:[{label:'Literal meaning',value:'Baba + Anne = Father\'s mother'},{label:'Contrast with',value:'Anneanne (mother\'s mother)'},{label:'General term',value:'Büyükanne works for both sides'}]},
+  dede:{emoji:'👴',turkish:'Büyükbaba · Dede',gen:'Generation 1 · Büyükbüyükler',desc:'Your father\'s father is also called Dede, just like your maternal grandfather. Both grandfathers share this affectionate title. The formal term Büyükbaba (big father) applies to both sides as well.',facts:[{label:'Common name',value:'Dede (both sides)'},{label:'Formal',value:'Büyükbaba'},{label:'Possessive',value:'Dedem (my grandfather)'}]},
+  agabey:{emoji:'👦',turkish:'Ağabey · Abi',gen:'Generation 3 · Kardeşler',desc:'In Turkish, your older brother is specifically called Ağabey (often shortened to Abi in casual speech). This is a term of respect — younger siblings always use it when addressing an older brother, never just his first name alone.',facts:[{label:'Full form',value:'Ağabey'},{label:'Casual form',value:'Abi (very common)'},{label:'Cultural note',value:'Always used as a respectful title, like "big bro"'}]},
+  abla:{emoji:'👧',turkish:'Abla',gen:'Generation 3 · Kardeşler',desc:'Abla is the Turkish word for older sister. Like Ağabey for brothers, this term carries real respect — younger siblings address their older sister as Abla, often adding it after her name (e.g. "Ayşe Abla"). Also used politely for older women outside the family.',facts:[{label:'Word',value:'Abla'},{label:'Used for',value:'Older sister (biological or respectful)'},{label:'Outside family',value:'Polite address for older women'}]},
+  'erkek-kardesh':{emoji:'👦',turkish:'Erkek Kardeş',gen:'Generation 3 · Kardeşler',desc:'A younger brother is Erkek Kardeş in Turkish — Erkek means male, Kardeş means sibling. The older brother gets the special title Ağabey, but for a younger brother you simply say Erkek Kardeş or just Kardeş.',facts:[{label:'Full term',value:'Erkek Kardeş'},{label:'Erkek =',value:'Male / Man'},{label:'Kardeş =',value:'Sibling'}]},
+  'kiz-kardesh':{emoji:'👧',turkish:'Kız Kardeş',gen:'Generation 3 · Kardeşler',desc:'A younger sister is Kız Kardeş — Kız means girl or daughter. Older sisters are called Abla (a special title of respect), while younger sisters are simply Kız Kardeş. Both are kardeş (siblings), but age defines the title.',facts:[{label:'Full term',value:'Kız Kardeş'},{label:'Kız =',value:'Girl / Daughter'},{label:'Compare',value:'Abla = older sister (special title)'}]},
+  ogul:{emoji:'👦',turkish:'Oğul · Oğlum',gen:'Generation 4 · Çocuklar',desc:'Oğul is the word for son in Turkish. When referring to your own son you say Oğlum (my son). It is a word full of pride and warmth — "Oğlum" is one of the most affectionate terms a parent uses in Turkish.',facts:[{label:'Base word',value:'Oğul (son)'},{label:'My son',value:'Oğlum'},{label:'Plural',value:'Oğullar (sons)'}]},
+  kiz:{emoji:'👧',turkish:'Kız · Kızım',gen:'Generation 4 · Çocuklar',desc:'Kız means both girl and daughter in Turkish — context makes the meaning clear. Your daughter is Kızım (my daughter). Kız also appears in Kız Kardeş (younger sister), showing how this word weaves through the whole family.',facts:[{label:'Word',value:'Kız (girl / daughter)'},{label:'My daughter',value:'Kızım'},{label:'Note',value:'Same word as in Kız Kardeş (younger sister)'}]},
+  'torun-k':{emoji:'👶',turkish:'Torun · Torunum',gen:'Generation 5 · Torunlar',desc:'Your grandchildren are Torunlar. A granddaughter can be called Torun Kız and a grandson Torun Oğlan, but most often just Torun is used for any grandchild. Torunum means "my grandchild" — the word every grandparent loves to say.',facts:[{label:'General',value:'Torun (grandchild)'},{label:'Granddaughter',value:'Torun Kız'},{label:'My grandchild',value:'Torunum'}]},
+  'torun-o':{emoji:'👶',turkish:'Torun · Torunum',gen:'Generation 5 · Torunlar',desc:'A grandson is Torun Oğlan in Turkish. As a grandparent, your grandchildren call you Büyükanne or Büyükbaba — completing the beautiful circle of the family tree. Torunlar (plural) is one of the most joyful words in all of Turkish.',facts:[{label:'Grandson',value:'Torun Oğlan'},{label:'Plural',value:'Torunlar (grandchildren)'},{label:'You are their',value:'Büyükanne or Büyükbaba'}]},
 };
 
 function showInfo(key) {
-  const d = familyData[key];
-  if (!d) return;
+  const d = familyData[key]; if (!d) return;
   const panel = document.getElementById('infoPanel');
   document.getElementById('infoEmoji').textContent = d.emoji;
   document.getElementById('infoTurkish').textContent = d.turkish;
   document.getElementById('infoGen').textContent = d.gen;
   document.getElementById('infoDesc').textContent = d.desc;
-  const factsEl = document.getElementById('infoFacts');
-  factsEl.innerHTML = d.facts.map(f =>
+  document.getElementById('infoFacts').innerHTML = d.facts.map(f =>
     `<div class="info-fact"><strong>${f.label}</strong>${f.value}</div>`
   ).join('');
   panel.classList.add('visible');
-  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  setTimeout(() => panel.scrollIntoView({behavior:'smooth',block:'nearest'}), 80);
 }
+function closeInfo() { document.getElementById('infoPanel').classList.remove('visible'); }
 
-// ─── QUIZ ───
+/* QUIZ */
 const quizData = [
-  { q: 'What do you call your mother in Turkish?', opts: ['Baba','Anne','Abla','Dede'], ans: 1 },
-  { q: 'Your older brother is called…', opts: ['Kardeş','Oğul','Ağabey','Dede'], ans: 2 },
-  { q: 'Anneanne is your…', opts: ["Father's mother","Mother's mother","Older sister","Grandmother on both sides"], ans: 1 },
-  { q: 'What does "Torun" mean?', opts: ['Father','Son','Grandchild','Sibling'], ans: 2 },
-  { q: 'Your older sister is called…', opts: ['Kız kardeş','Abla','Abi','Annem'], ans: 1 },
-  { q: 'Büyük means…', opts: ['Small','Father','Big/Great','Family'], ans: 2 },
-  { q: 'Your younger sister is…', opts: ['Abla','Kız kardeş','Anneanne','Babaanne'], ans: 1 },
-  { q: '"Ben" in Turkish means…', opts: ['You','He/She','I / Me','We'], ans: 2 },
-  { q: 'Babaanne is your…', opts: ["Mother's mother","Father's mother","Cousin","Aunt"], ans: 1 },
-  { q: 'How do you say "my son" in Turkish?', opts: ['Oğul','Kızım','Oğlum','Oğlan'], ans: 2 },
+  {q:'What do you call your mother in Turkish?',opts:['Baba','Anne','Abla','Dede'],ans:1},
+  {q:'Your older brother is called…',opts:['Kardeş','Oğul','Ağabey','Dede'],ans:2},
+  {q:'Anneanne is your…',opts:["Father's mother","Mother's mother","Older sister","Both grandmothers"],ans:1},
+  {q:'What does "Torun" mean?',opts:['Father','Son','Grandchild','Sibling'],ans:2},
+  {q:'Your older sister is called…',opts:['Kız kardeş','Abla','Abi','Annem'],ans:1},
+  {q:'Büyük means…',opts:['Small','Father','Big / Great','Family'],ans:2},
+  {q:'Your younger sister is…',opts:['Abla','Kız kardeş','Anneanne','Babaanne'],ans:1},
+  {q:'"Ben" in Turkish means…',opts:['You','He / She','I / Me','We'],ans:2},
+  {q:'Babaanne is your…',opts:["Mother's mother","Father's mother","Cousin","Aunt"],ans:1},
+  {q:'How do you say "my son" in Turkish?',opts:['Oğul','Kızım','Oğlum','Oğlan'],ans:2},
 ];
-
-let qi = 0, score = 0, answered = false;
-
-function renderQ() {
-  const q = quizData[qi];
-  document.getElementById('quizQ').textContent = q.q;
-  document.getElementById('quizFb').textContent = '';
-  document.getElementById('quizNext').style.display = 'none';
-  answered = false;
-  const optsEl = document.getElementById('quizOpts');
-  optsEl.innerHTML = q.opts.map((o, i) =>
-    `<button class="quiz-btn" onclick="answerQ(${i})">${o}</button>`
-  ).join('');
-  document.getElementById('quizScore').textContent = `Question ${qi+1} of ${quizData.length} · Score: ${score}`;
+let qi=0,score=0,answered=false;
+function renderQ(){
+  const q=quizData[qi];
+  document.getElementById('quizQ').textContent=q.q;
+  document.getElementById('quizFb').textContent='';
+  document.getElementById('quizFb').style.color='';
+  document.getElementById('quizNext').style.display='none';
+  answered=false;
+  document.getElementById('quizOpts').innerHTML=q.opts.map((o,i)=>
+    `<button class="quiz-btn" onclick="answerQ(${i})">${o}</button>`).join('');
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${quizData.length} · Score: ${score}`;
 }
-
-function answerQ(i) {
-  if (answered) return;
-  answered = true;
-  const q = quizData[qi];
-  const btns = document.querySelectorAll('.quiz-btn');
+function answerQ(i){
+  if(answered)return; answered=true;
+  const q=quizData[qi];
+  const btns=document.querySelectorAll('.quiz-btn');
   btns[q.ans].classList.add('correct');
-  if (i === q.ans) {
-    score++;
-    document.getElementById('quizFb').textContent = '✓ Correct! Well done.';
-    document.getElementById('quizFb').style.color = '#4fa89a';
-  } else {
-    btns[i].classList.add('wrong');
-    document.getElementById('quizFb').textContent = `✗ Not quite. The answer is "${q.opts[q.ans]}".`;
-    document.getElementById('quizFb').style.color = '#c97c6e';
-  }
-  document.getElementById('quizScore').textContent = `Question ${qi+1} of ${quizData.length} · Score: ${score}`;
-  document.getElementById('quizNext').style.display = 'inline-flex';
+  if(i===q.ans){score++;document.getElementById('quizFb').textContent='✓ Correct! Well done.';document.getElementById('quizFb').style.color='#0f6b40';}
+  else{btns[i].classList.add('wrong');document.getElementById('quizFb').textContent=`✗ Not quite — the answer is "${q.opts[q.ans]}".`;document.getElementById('quizFb').style.color='#8a1f14';}
+  document.getElementById('quizScore').textContent=`Question ${qi+1} of ${quizData.length} · Score: ${score}`;
+  document.getElementById('quizNext').style.display='inline-flex';
 }
-
-function nextQ() {
+function nextQ(){
   qi++;
-  if (qi >= quizData.length) {
-    document.getElementById('quizQ').textContent = `Quiz complete! You scored ${score} out of ${quizData.length}.`;
-    document.getElementById('quizOpts').innerHTML = '';
-    document.getElementById('quizFb').textContent = score >= 8 ? '🌟 Excellent! You know your Turkish family words!' : score >= 5 ? '👍 Good job! Keep practising!' : '📚 Keep learning — you\'ll get there!';
-    document.getElementById('quizFb').style.color = 'var(--text-muted)';
-    document.getElementById('quizNext').textContent = 'Try again ↺';
-    document.getElementById('quizNext').onclick = () => { qi=0; score=0; renderQ(); document.getElementById('quizNext').textContent='Next question →'; document.getElementById('quizNext').onclick=nextQ; };
-    document.getElementById('quizScore').textContent = '';
+  if(qi>=quizData.length){
+    document.getElementById('quizQ').textContent=`Quiz complete! You scored ${score} out of ${quizData.length}.`;
+    document.getElementById('quizOpts').innerHTML='';
+    const fb=document.getElementById('quizFb');
+    fb.textContent=score>=8?'🌟 Excellent! You really know your Turkish family words!':score>=5?'👍 Good job! Keep practising!':'📚 Keep learning — you\'ll get there!';
+    fb.style.color='var(--text-2)';
+    const nb=document.getElementById('quizNext');
+    nb.textContent='Try again ↺'; nb.style.display='inline-flex';
+    nb.onclick=()=>{qi=0;score=0;nb.textContent='Next question →';nb.onclick=nextQ;renderQ();};
+    document.getElementById('quizScore').textContent='';
     return;
   }
   renderQ();
 }
-
 renderQ();
 </script>
 </body>
