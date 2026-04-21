@@ -163,13 +163,139 @@ footer{padding:3rem 1.5rem;text-align:center;border-top:1px solid var(--border);
 footer p{font-size:clamp(0.87rem,2vw,0.97rem);color:var(--text-3)}
 footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--accent);font-size:1.08rem}
 
-/* RESPONSIVE */
-@media(max-width:500px){
+/* ═══════════════════════════════════════════════════
+   MOBILE OVERRIDES — max-width: 600px
+   Only these rules change for mobile. Desktop is untouched.
+   ═══════════════════════════════════════════════════ */
+@media(max-width:600px){
+
+  /* Tree section padding */
+  .tree-section{padding:2.5rem 0.75rem 4rem}
+
+  /* Gen band pills wrap gracefully */
+  .gen-band{gap:6px;margin-bottom:12px}
+  .gen-band-pill{font-size:0.65rem;padding:5px 10px;white-space:normal;max-width:200px;line-height:1.3}
+  .gen-band-line{max-width:28px}
+
+  /* ── MOBILE TREE: stacked 2-column pairs ── */
+
+  /* Gen 1: show as 2×2 grid */
+  .tree-row.gen1-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:0 4px;
+  }
+  /* hide the × separator on mobile for gen1 */
+  .tree-row.gen1-row .times-sep{display:none}
+  .tree-row.gen1-row .tree-col{min-width:0;max-width:none;flex:none}
+
+  /* Gen 2: 2-col centered */
+  .tree-row.gen2-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:0 4px;
+    justify-items:center;
+  }
+  .tree-row.gen2-row .times-sep{display:none}
+  .tree-row.gen2-row .tree-col{min-width:0;max-width:none;flex:none;width:100%}
+
+  /* Gen 3: YOU centred big, siblings in 2×2 grid below */
+  .tree-row.gen3-row{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    padding:0 4px;
+  }
+  /* YOU card stands alone at top */
+  .tree-row.gen3-row .you-col{
+    width:100%;
+    max-width:200px;
+    order:-1;
+  }
+  /* siblings group into a 2×2 grid */
+  .tree-row.gen3-row .sibs-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    width:100%;
+  }
+  .tree-row.gen3-row .tree-col-sm{min-width:0;max-width:none;flex:none}
+
+  /* Gen 4: 2-col */
+  .tree-row.gen4-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:0 4px;
+  }
+  .tree-row.gen4-row .tree-col{min-width:0;max-width:none;flex:none}
+
+  /* Gen 5: 3-col small */
+  .tree-row.gen5-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:8px;
+    padding:0 4px;
+  }
+  .tree-row.gen5-row .tree-col-sm{min-width:0;max-width:none;flex:none}
+
+  /* Cards: slightly more compact on mobile */
+  .person-card{padding:12px 8px;border-radius:14px}
+  .card-avatar{width:44px;height:44px;font-size:1.3rem;margin-bottom:7px}
+  .card-turkish{font-size:0.92rem}
+  .card-english{font-size:0.65rem}
+  .card-tap{font-size:0.6rem;margin-top:5px}
+
+  /* YOU card stays a bit bigger */
+  .you-card .card-turkish{font-size:1.2rem}
+  .you-star{font-size:1.8rem}
+
+  /* Hide all the old connector divs on mobile — replace with simple spacing */
+  .mobile-hide{display:none!important}
+
+  /* Simple mobile connector: just a thin centered vertical line */
+  .mobile-conn{
+    display:flex;
+    justify-content:center;
+    margin:0 auto;
+  }
+  .mobile-conn-line{
+    width:2px;
+    height:18px;
+    border-radius:2px;
+  }
+  /* Horizontal bridge for pairs */
+  .mobile-conn-h{
+    display:flex;
+    justify-content:center;
+    margin:0 auto;
+  }
+  .mobile-conn-bridge{
+    height:2px;
+    border-radius:2px;
+    opacity:0.4;
+  }
+
+  /* Info panel on mobile */
+  .info-panel{margin:1.2rem 0;padding:1.2rem 1rem;border-radius:18px}
+  .info-tr{font-size:1.2rem}
+  .info-desc{font-size:0.94rem}
+  .info-fact{font-size:0.82rem;padding:8px 10px}
+
+  /* Legend items smaller */
+  .legend-item{font-size:0.74rem;padding:5px 12px}
+
+  /* Quiz */
   .quiz-options{grid-template-columns:1fr}
-  .tree-row{gap:8px}
-  .tree-col,.tree-col-sm{min-width:clamp(85px,25vw,115px);max-width:130px}
-  .times-sep{flex:0 0 24px;font-size:1rem}
-  .gen-band-pill{font-size:0.68rem;padding:5px 12px}
+}
+
+/* Very small phones */
+@media(max-width:380px){
+  .tree-row.gen5-row{grid-template-columns:1fr 1fr}
+  .gen-band-pill{font-size:0.6rem;padding:4px 8px}
 }
 </style>
 </head>
@@ -263,7 +389,9 @@ footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--ac
       <div class="gen-band-pill" style="background:var(--g1-bg);color:var(--g1-tx);border:1.5px solid var(--g1-bd)">Generation 1 · Büyükbüyükler — Grandparents</div>
       <div class="gen-band-line" style="background:var(--g1-bd);opacity:.4"></div>
     </div>
-    <div class="tree-row">
+
+    <!-- Gen 1 row — desktop unchanged, mobile gets gen1-row class for 2×2 grid -->
+    <div class="tree-row gen1-row">
       <div class="tree-col"><div class="person-card g1" onclick="showInfo('anneanne')">
         <div class="card-avatar">👵</div><div class="card-turkish">Anneanne</div>
         <div class="card-english">Maternal grandma</div><div class="card-tap">Tap to learn</div>
@@ -283,27 +411,32 @@ footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--ac
       </div></div>
     </div>
 
-    <!-- G1→G2 connectors -->
-    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+    <!-- G1→G2 connectors (desktop) -->
+    <div class="mobile-hide" style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g1-bd)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g1-bd)"></div></div>
       <div style="flex:0 0 clamp(28px,4vw,46px)"></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g1-bd)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g1-bd)"></div></div>
     </div>
-    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+    <div class="mobile-hide" style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:flex-end;"><div style="width:50%;height:2px;background:rgba(139,125,216,0.35)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:flex-start;"><div style="width:50%;height:2px;background:rgba(139,125,216,0.35)"></div></div>
       <div style="flex:0 0 clamp(28px,4vw,46px)"></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:flex-end;"><div style="width:50%;height:2px;background:rgba(139,125,216,0.35)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:flex-start;"><div style="width:50%;height:2px;background:rgba(139,125,216,0.35)"></div></div>
     </div>
-    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+    <div class="mobile-hide" style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;"></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g2-bd)"></div></div>
       <div style="flex:0 0 clamp(28px,4vw,46px)"></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g2-bd)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;"></div>
+    </div>
+
+    <!-- G1→G2 connector (mobile only) -->
+    <div class="mobile-conn" style="display:none;">
+      <div class="mobile-conn-line" style="background:var(--g1-bd);"></div>
     </div>
 
     <!-- ══ GEN 2 ══ -->
@@ -312,7 +445,8 @@ footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--ac
       <div class="gen-band-pill" style="background:var(--g2-bg);color:var(--g2-tx);border:1.5px solid var(--g2-bd)">Generation 2 · Ebeveynler — Parents</div>
       <div class="gen-band-line" style="background:var(--g2-bd);opacity:.4"></div>
     </div>
-    <div class="tree-row" style="justify-content:center;">
+
+    <div class="tree-row gen2-row" style="justify-content:center;">
       <div class="tree-col"><div class="person-card g2" onclick="showInfo('anne')">
         <div class="card-avatar">👩</div><div class="card-turkish">Anne</div>
         <div class="card-english">Mother</div><div class="card-tap">Tap to learn</div>
@@ -324,21 +458,26 @@ footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--ac
       </div></div>
     </div>
 
-    <!-- G2→G3 -->
-    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;">
+    <!-- G2→G3 connectors (desktop) -->
+    <div class="mobile-hide" style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;">
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g2-bd)"></div></div>
       <div style="flex:0 0 clamp(28px,4vw,46px)"></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g2-bd)"></div></div>
     </div>
-    <div style="display:flex;justify-content:center;padding:0 8px;">
+    <div class="mobile-hide" style="display:flex;justify-content:center;padding:0 8px;">
       <div style="height:2px;width:min(76%,600px);background:rgba(58,170,142,0.3);border-radius:2px;"></div>
     </div>
-    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+    <div class="mobile-hide" style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
       <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g3-bd)"></div></div>
       <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g3-bd)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--accent)"></div></div>
       <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g3-bd)"></div></div>
       <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g3-bd)"></div></div>
+    </div>
+
+    <!-- G2→G3 connector (mobile only) -->
+    <div class="mobile-conn" style="display:none;">
+      <div class="mobile-conn-line" style="background:var(--g2-bd);"></div>
     </div>
 
     <!-- ══ GEN 3 ══ -->
@@ -347,41 +486,50 @@ footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--ac
       <div class="gen-band-pill" style="background:var(--g3-bg);color:var(--g3-tx);border:1.5px solid var(--g3-bd)">Generation 3 · Sen &amp; Kardeşlerin — You &amp; Your Siblings</div>
       <div class="gen-band-line" style="background:var(--g3-bd);opacity:.4"></div>
     </div>
-    <div class="tree-row" style="align-items:flex-start;">
-      <div class="tree-col-sm"><div class="person-card g3s" onclick="showInfo('agabey')">
+
+    <!-- Gen 3: desktop row unchanged; mobile uses gen3-row restructuring -->
+    <div class="tree-row gen3-row" style="align-items:flex-start;">
+      <!-- Older siblings — wrapped in sibs-grid on mobile -->
+      <div class="tree-col-sm sibs-grid-left"><div class="person-card g3s" onclick="showInfo('agabey')">
         <div class="card-avatar">👦</div><div class="card-turkish">Ağabey</div>
         <div class="card-english">Older brother</div><div class="card-tap">Tap to learn</div>
       </div></div>
-      <div class="tree-col-sm"><div class="person-card g3s" onclick="showInfo('abla')">
+      <div class="tree-col-sm sibs-grid-left"><div class="person-card g3s" onclick="showInfo('abla')">
         <div class="card-avatar">👧</div><div class="card-turkish">Abla</div>
         <div class="card-english">Older sister</div><div class="card-tap">Tap to learn</div>
       </div></div>
 
       <!-- YOU -->
-      <div class="tree-col"><div class="person-card you-card" onclick="showInfo('ben')">
+      <div class="tree-col you-col"><div class="person-card you-card" onclick="showInfo('ben')">
         <span class="you-star">⭐</span>
         <div class="card-turkish">Ben</div>
         <div class="card-english" style="color:var(--accent-dk);">That's you!</div>
         <div class="card-tap" style="opacity:.45;">Tap to learn</div>
       </div></div>
 
-      <div class="tree-col-sm"><div class="person-card g3s" onclick="showInfo('erkek-kardesh')">
+      <!-- Younger siblings -->
+      <div class="tree-col-sm sibs-grid-right"><div class="person-card g3s" onclick="showInfo('erkek-kardesh')">
         <div class="card-avatar">👦</div><div class="card-turkish">Erkek Kardeş</div>
         <div class="card-english">Younger brother</div><div class="card-tap">Tap to learn</div>
       </div></div>
-      <div class="tree-col-sm"><div class="person-card g3s" onclick="showInfo('kiz-kardesh')">
+      <div class="tree-col-sm sibs-grid-right"><div class="person-card g3s" onclick="showInfo('kiz-kardesh')">
         <div class="card-avatar">👧</div><div class="card-turkish">Kız Kardeş</div>
         <div class="card-english">Younger sister</div><div class="card-tap">Tap to learn</div>
       </div></div>
     </div>
 
-    <!-- BEN→G4 -->
-    <div style="display:flex;justify-content:center;"><div class="conn-v" style="height:20px;--clr:var(--accent)"></div></div>
-    <div style="display:flex;justify-content:center;"><div style="height:2px;width:min(52%,360px);background:rgba(201,148,26,0.35);border-radius:2px;"></div></div>
-    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+    <!-- BEN→G4 connectors (desktop) -->
+    <div class="mobile-hide" style="display:flex;justify-content:center;"><div class="conn-v" style="height:20px;--clr:var(--accent)"></div></div>
+    <div class="mobile-hide" style="display:flex;justify-content:center;"><div style="height:2px;width:min(52%,360px);background:rgba(201,148,26,0.35);border-radius:2px;"></div></div>
+    <div class="mobile-hide" style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g4-bd)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g4-bd)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g4-bd)"></div></div>
+    </div>
+
+    <!-- BEN→G4 connector (mobile only) -->
+    <div class="mobile-conn" style="display:none;">
+      <div class="mobile-conn-line" style="background:var(--accent);"></div>
     </div>
 
     <!-- ══ GEN 4 ══ -->
@@ -390,7 +538,8 @@ footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--ac
       <div class="gen-band-pill" style="background:var(--g4-bg);color:var(--g4-tx);border:1.5px solid var(--g4-bd)">Generation 4 · Çocukların — Your Children</div>
       <div class="gen-band-line" style="background:var(--g4-bd);opacity:.4"></div>
     </div>
-    <div class="tree-row" style="justify-content:center;">
+
+    <div class="tree-row gen4-row" style="justify-content:center;">
       <div class="tree-col"><div class="person-card g4" onclick="showInfo('ogul')">
         <div class="card-avatar">👦</div><div class="card-turkish">Oğul</div>
         <div class="card-english">Son</div><div class="card-tap">Tap to learn</div>
@@ -399,21 +548,25 @@ footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--ac
         <div class="card-avatar">👧</div><div class="card-turkish">Kız</div>
         <div class="card-english">Daughter</div><div class="card-tap">Tap to learn</div>
       </div></div>
-      
     </div>
 
-    <!-- G4→G5 -->
-    <div style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
+    <!-- G4→G5 connectors (desktop) -->
+    <div class="mobile-hide" style="display:flex;justify-content:center;gap:clamp(10px,2vw,22px);flex-wrap:wrap;padding:0 8px;">
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g4-bd)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g4-bd)"></div></div>
       <div style="flex:1;min-width:clamp(110px,22vw,152px);max-width:172px;display:flex;justify-content:center;"><div class="conn-v" style="height:14px;--clr:var(--g4-bd)"></div></div>
     </div>
-    <div style="display:flex;justify-content:center;"><div style="height:2px;width:min(68%,450px);background:rgba(201,160,16,0.3);border-radius:2px;"></div></div>
-    <div style="display:flex;justify-content:center;gap:clamp(8px,1.5vw,18px);flex-wrap:wrap;padding:0 8px;">
+    <div class="mobile-hide" style="display:flex;justify-content:center;"><div style="height:2px;width:min(68%,450px);background:rgba(201,160,16,0.3);border-radius:2px;"></div></div>
+    <div class="mobile-hide" style="display:flex;justify-content:center;gap:clamp(8px,1.5vw,18px);flex-wrap:wrap;padding:0 8px;">
       <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g5-bd)"></div></div>
       <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g5-bd)"></div></div>
       <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g5-bd)"></div></div>
       <div style="flex:1;min-width:clamp(88px,17vw,125px);max-width:142px;display:flex;justify-content:center;"><div class="conn-v" style="height:16px;--clr:var(--g5-bd)"></div></div>
+    </div>
+
+    <!-- G4→G5 connector (mobile only) -->
+    <div class="mobile-conn" style="display:none;">
+      <div class="mobile-conn-line" style="background:var(--g4-bd);"></div>
     </div>
 
     <!-- ══ GEN 5 ══ -->
@@ -422,21 +575,20 @@ footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--ac
       <div class="gen-band-pill" style="background:var(--g5-bg);color:var(--g5-tx);border:1.5px solid var(--g5-bd)">Generation 5 · Torunların — Your Grandchildren</div>
       <div class="gen-band-line" style="background:var(--g5-bd);opacity:.4"></div>
     </div>
-    <div class="tree-row" style="justify-content:center;gap:clamp(8px,1.5vw,18px);">
-        <div class="tree-col-sm"><div class="person-card g5" onclick="showInfo('torun-o')">
+
+    <div class="tree-row gen5-row" style="justify-content:center;gap:clamp(8px,1.5vw,18px);">
+      <div class="tree-col-sm"><div class="person-card g5" onclick="showInfo('torun-o')">
         <div class="card-avatar">👶</div><div class="card-turkish">Torun</div>
         <div class="card-english">Grandson</div><div class="card-tap">Tap to learn</div>
-      </div></div>      
-        <div class="tree-col-sm"><div class="person-card g5" onclick="showInfo('torun-k')">
+      </div></div>
+      <div class="tree-col-sm"><div class="person-card g5" onclick="showInfo('torun-k')">
         <div class="card-avatar">👶</div><div class="card-turkish">Torun</div>
         <div class="card-english">Granddaughter</div><div class="card-tap">Tap to learn</div>
       </div></div>
-      
       <div class="tree-col-sm"><div class="person-card g5" onclick="showInfo('torun-k')">
         <div class="card-avatar">👶</div><div class="card-turkish">Torun</div>
         <div class="card-english">Grandchild</div><div class="card-tap">Tap to learn</div>
       </div></div>
-      
     </div>
 
   </div><!-- /tree-container -->
@@ -546,6 +698,55 @@ footer .fw{font-family:'Playfair Display',serif;font-style:italic;color:var(--ac
 </footer>
 
 <script>
+/* ── Mobile layout adjustments via JS ─────────────────────────────────────
+   Show/hide connector elements and restructure Gen 3 row on mobile.
+   This keeps desktop completely untouched.
+───────────────────────────────────────────────────────────────────────── */
+function applyMobileTree() {
+  const isMobile = window.innerWidth <= 600;
+
+  // Show/hide mobile connectors
+  document.querySelectorAll('.mobile-conn').forEach(el => {
+    el.style.display = isMobile ? 'flex' : 'none';
+  });
+
+  // Gen 3 row restructure on mobile
+  const gen3Row = document.querySelector('.tree-row.gen3-row');
+  if (!gen3Row) return;
+
+  if (isMobile) {
+    // Build: [YOU big card on top] then [2×2 siblings grid below]
+    const youCol = gen3Row.querySelector('.you-col');
+    const sibsLeft = gen3Row.querySelectorAll('.sibs-grid-left');
+    const sibsRight = gen3Row.querySelectorAll('.sibs-grid-right');
+
+    // Only restructure once
+    if (!gen3Row.dataset.mobileDone) {
+      gen3Row.dataset.mobileDone = '1';
+
+      // Clear row, re-insert in mobile order
+      gen3Row.innerHTML = '';
+
+      // YOU first (full width)
+      youCol.style.cssText = 'width:100%;max-width:200px;margin:0 auto 10px;';
+      gen3Row.appendChild(youCol);
+
+      // Siblings in a 2×2 grid wrapper
+      const grid = document.createElement('div');
+      grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;';
+      sibsLeft.forEach(el => { el.style.cssText = 'min-width:0;max-width:none;flex:none;'; grid.appendChild(el); });
+      sibsRight.forEach(el => { el.style.cssText = 'min-width:0;max-width:none;flex:none;'; grid.appendChild(el); });
+      gen3Row.appendChild(grid);
+    }
+  }
+}
+
+// Run on load and resize
+applyMobileTree();
+window.addEventListener('resize', applyMobileTree);
+
+
+/* ── Family data ─────────────────────────────────────────────────────── */
 const familyData = {
   ben:{emoji:'⭐',turkish:'Ben — Sen!',gen:'Generation 3 · The Centre',desc:'Ben means "I" or "me" in Turkish, and Sen means "you." You are the reference point for the entire family tree — every other member\'s title describes how they relate to you personally.',facts:[{label:'Pronouns',value:'Ben (I), Sen (you), O (he/she)'},{label:'Your role',value:'Centre of the family tree'},{label:'Possessive',value:'Add -im / -ım to make things "mine"'}]},
   anne:{emoji:'👩',turkish:'Anne · Annem',gen:'Generation 2 · Ebeveynler',desc:'Anne is the Turkish word for mother. When speaking about your own mother you say Annem (my mother). It is one of the first words Turkish children learn — warm and universally understood.',facts:[{label:'Formal',value:'Anne'},{label:'Possessive',value:'Annem (my mother)'},{label:'Memory tip',value:'"Anne" sounds like a name — super easy to remember!'}]},
